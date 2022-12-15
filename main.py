@@ -56,15 +56,20 @@ def main(fp, ft=None, fr=None, fth=None, fph=None, keys=None):
 
     # Step 7: Calculate polarization angle at observer:
     print('(7) Calculate the polarization angle ...')
-    cos_pol_angle = final.calculate_pol_angle(ft, fr, fth, fph, 35., 1., data['bha'])
-    pol_angle = np.arccos(cos_pol_angle)
-    print(' -  cos(psi): {}'.format(cos_pol_angle))
+    pol_angle = final.calculate_pol_angle(ft, fr, fth, fph, 35., 1., data['bha'])
     print(' -  psi     : {}'.format(pol_angle))
 
     return pol_angle
 
 
 if __name__ == '__main__':
-    fp = 'Z:/Data/v/3.141592653589793/data/-0.0_-0.002595070280410998_7.901996434418482.json'
+    fp = ['Z:/Data/v0/0.0/data/-0.0_0.004194273846645237_-5.310068737755823.json',
+          'Z:/Data/v/0.0/data/-0.0_0.004194273846645237_-5.310068737755823.json',
+          'Z:/Data/s_015/0.0/data/-0.0015_0.004194273846645237_-5.310068737755823.json']
 
-    main(fp)
+    for f in fp:
+        print('----------------------------')
+        print('Starting run for ')
+        print('{}\n'.format(f))
+        main(f)
+        print('----------------------------')

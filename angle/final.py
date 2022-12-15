@@ -24,6 +24,8 @@ def calculate_pol_angle(ft, fr, fth, fphi, robs, tobs, bha):
     f2 /= f0
     f3 /= f0
 
-    angle = f2 / np.sqrt(f2 ** 2 + f3 ** 2)
+    angle = np.arctan2(1, 0) - np.arctan2(f2 / np.sqrt(f2 ** 2 + f3 ** 2), f3 / np.sqrt(f2 ** 2 + f3 ** 2))
+    if angle < 0:
+        angle += 2 * np.pi
 
     return angle

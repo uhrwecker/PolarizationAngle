@@ -15,17 +15,18 @@ def transform_f(dt, dr, dth, dphi, u1, u3, v, nu, mu1, mu2, psi, omega):
     ka2 = mu2 * dth
     ka3 = - omega * nu * dt + psi * dphi
 
-    kc0 = gv * ka0 - gv * v * ka3
+    kc0 = gv * ka0 + gv * v * ka3
     kc1 = ka1
     kc2 = ka2
-    kc3 = - gv * v * ka0 + gv * ka0
+    kc3 = gv * v * ka0 + gv * ka0
 
-    kd0 = gu * kc0 - gu * u1 * kc1 - gu * u3 * kc3
-    kd1 = - gu * u1 * kc0 + (1 + gu ** 2 * u1 ** 2 / (1 + gu)) * kc1 + gu ** 2 * u1 * u3 / (1 + gu) * kc3
+    kd0 = gu * kc0 + gu * u1 * kc1 + gu * u3 * kc3
+    kd1 = + gu * u1 * kc0 + (1 + gu ** 2 * u1 ** 2 / (1 + gu)) * kc1 + gu ** 2 * u1 * u3 / (1 + gu) * kc3
     kd2 = kc2
-    kd3 = - gu * u3 * kc0 + gu ** 2 * u1 * u3 / (1 + gu) * kc1 + (1 + gu ** 2 * u3 ** 2 / (1 + gu)) * kc3
+    kd3 = + gu * u3 * kc0 + gu ** 2 * u1 * u3 / (1 + gu) * kc1 + (1 + gu ** 2 * u3 ** 2 / (1 + gu)) * kc3
 
     # 2. define f in the SURF frame
+    #print(-kc0**2 + kc1 ** 2 + kc3 ** 2 + kc2 ** 2)
 
     fd0 = np.sqrt(kd2 ** 2 / (kd0 ** 2 - kd2 ** 2))
     fd1 = 0
