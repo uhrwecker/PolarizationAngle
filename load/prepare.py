@@ -2,8 +2,11 @@ import json
 
 
 def prepare_data(fp):
-    with open(fp, 'r') as f:
-        data = json.load(f)
+    if type(fp) == type('m'):
+        with open(fp, 'r') as f:
+            data = json.load(f)
+    else:
+        data = fp
 
     new_data = {}
 
@@ -16,7 +19,10 @@ def prepare_data(fp):
     new_data['dth_em'] = data['INITIAL_DATA']['dtheta']
     new_data['dph_em'] = data['INITIAL_DATA']['dphi']
 
-    new_data['bha'] = data['EMITTER']['bh_a']
+    try:
+        new_data['bha'] = data['EMITTER']['bh_a']
+    except KeyError:
+        new_data['bha'] = 0.
 
     new_data['u1'] = data['VELOCITIES']['surf_u1']
     new_data['u3'] = data['VELOCITIES']['surf_u3']
