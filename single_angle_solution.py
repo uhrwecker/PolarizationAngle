@@ -32,10 +32,13 @@ def main(data, u1, u3, v, ft=None, fr=None, fth=None, fph=None, keys=None):
     # Step 6: Evaluate f at observer:
     values = [35., K1, K2, dt, dr, dth, dph, -(1 - 2 / 35.), np.sin(1.) ** 2]
 
-    ft = float(ft.subs({keys[i]: values[i] for i in range(len(values))}))
-    fr = float(fr.subs({keys[i]: values[i] for i in range(len(values))}))
-    fth = float(fth.subs({keys[i]: values[i] for i in range(len(values))}))
-    fph = float(fph.subs({keys[i]: values[i] for i in range(len(values))}))
+    try:
+        ft = float(ft.subs({keys[i]: values[i] for i in range(len(values))}))
+        fr = float(fr.subs({keys[i]: values[i] for i in range(len(values))}))
+        fth = float(fth.subs({keys[i]: values[i] for i in range(len(values))}))
+        fph = float(fph.subs({keys[i]: values[i] for i in range(len(values))}))
+    except:
+        return 0.
 
     # Step 7: Calculate polarization angle at observer:
     pol_angle = final.calculate_pol_angle(ft, fr, fth, fph, 35., 1., data['bha'])
