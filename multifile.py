@@ -80,12 +80,12 @@ def main(fp_data, fp_save, s):
         if not os.path.isdir(fp_save+phi):
             os.mkdir(fp_save + phi)
 
-        res = evaluate(file, fp_save + phi, ft, fr, fth, fph, keys, s)
+        res = evaluate(file, fp_save, ft, fr, fth, fph, keys, s)
 
 
 if __name__ == '__main__':
-    fp_data = '/home/jan-menno/Data/redshift/'
-    fp_save = '/home/jan-menno/Data/s0/'
+    fp_data = 'Z:/Data/s0/'
+    fp_save = 'Z:/Data/pol/'
 
     s = 0.
 

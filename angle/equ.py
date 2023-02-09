@@ -49,10 +49,10 @@ def my_fav_fun():#ft, fr, fth, fphi, r, k1, k2, kt, kr, kth, kphi, alpha, beta):
     #res_phi = simplify(res_phi.subs(grr, 1 / alpha))
     #res_phi = simplify(res_phi.subs(gthth, r ** 2))
 
-    res_t = simplify(res[0][ft])
-    res_r = simplify(res[0][fr])
-    res_th = simplify(res[0][fth])
-    res_p = simplify(res[0][fphi])
+    res_t = simplify(res[1][ft])
+    res_r = simplify(res[1][fr])
+    res_th = simplify(res[1][fth])
+    res_p = simplify(res[1][fphi])
 
     #print('t component:')
     #print_latex(res_t)

@@ -41,7 +41,7 @@ def main(data, u1, u3, v, ft=None, fr=None, fth=None, fph=None, keys=None):
         return 0.
 
     # Step 7: Calculate polarization angle at observer:
-    pol_angle = final.calculate_pol_angle(ft, fr, fth, fph, 35., 1., data['bha'])
+    pol_angle = final.calculate_pol_angle(ft, fr, fth, fph, 35., 1., data['bha'], data['alpha'], data['beta'])
 
     return pol_angle
 
