@@ -13,7 +13,7 @@ def draw_arrows(ax, g, alpha, beta, margin):
     alpha += np.abs(np.amax(alpha) - np.amin(alpha)) / int(np.sqrt(len(g)))
     # beta += np.abs(np.amax(beta) - np.amin(beta)) / int(np.sqrt(len(g)))
 
-    factor = 1#0.000066  # 18
+    factor = 0.000066  # 18
 
     for n, sample in zip(n_sample, g_sample):
         marg = 2 * margin * n / len(n_sample) - margin
@@ -39,10 +39,10 @@ def plot_redshift_distribution(fp, ax, s, fig, flag=False, pi_factor=0.):
     g[g == 0] = np.nan
     if np.nanmax(be) < 0 and 0 < np.nanmean(g) < 3:
         g += np.pi
-
+    g += 0.5 * np.pi
     draw_arrows(ax, g, data[:, 0], data[:, 1], margin=0.6)
 
-    g += 0.5 * np.pi
+
 
     # g = - g
 
@@ -69,7 +69,7 @@ def plot_redshift_distribution(fp, ax, s, fig, flag=False, pi_factor=0.):
     norm = mp.colors.Normalize(0, 2 * np.pi)
     # norm = mp.colors.Normalize(np.nanmin(g), np.nanmax(g))
 
-    margin = 1
+    margin = 0#1
     im = ax.imshow(g, extent=(np.amin(data[:, 0]) - margin, np.amax(data[:, 0]) + margin,
                               np.amin(data[:, 1]) - margin, np.amax(data[:, 1]) + margin), norm=norm, cmap=cmap)
 
@@ -86,39 +86,22 @@ def plot_redshift_distribution(fp, ax, s, fig, flag=False, pi_factor=0.):
         ax.set_xlabel(r'$\alpha$')
 
     ax.scatter(0, 0, label=f's ={s}', s=0)
-    #ax.legend()
+    ax.legend()
     # ax.set_xlim(-10, 10)
     # ax.set_ylim(-10, 10)
-    #ax.set_xlim(np.amin(data[:, 0]), np.amax(data[:, 0]))
-    #ax.set_ylim(np.amin(data[:, 1]), np.amax(data[:, 1]))
+    ax.set_xlim(np.amin(data[:, 0]), np.amax(data[:, 0]))
+    ax.set_ylim(np.amin(data[:, 1]), np.amax(data[:, 1]))
 
     return np.nanmin(g), np.nanmax(g), im
 
 
 def main():
-    #fp = 'Z:/Data/06022023/polarization/0.0'
+    fp = 'Z:/Data/06022023/polarization/0.0'
+    fp = 'Z:/Data/06022023/polarization/1.0389519011871757'
+    fp = 'Z:/Data/06022023/polarization/2.028429902317819'
+    fp = 'Z:/Data/06022023/polarization/3.017907903448463'
     #fp = 'Z:/Data/06022023/polarization/1.0389519011871757'
-    #fp = 'Z:/Data/06022023/polarization/2.028429902317819'
-    #fp = 'Z:/Data/06022023/polarization/3.017907903448463'
-    #fp = 'Z:/Data/06022023/polarization/4.007385904579106'
-    #fp = 'Z:/Data/06022023/polarization/5.0463378057662815'
-    #fp = 'Z:/Data/06022023/polarization/6.035815806896926'
-
-    tag = 'arctan'
-
-    #fps = [f'Z:/Data/06022023/polarization/{tag}/0.0',
-    #       f'Z:/Data/06022023/polarization/{tag}/1.0389519011871757',
-    #       f'Z:/Data/06022023/polarization/{tag}/2.028429902317819',
-    #       f'Z:/Data/06022023/polarization/{tag}/3.017907903448463',
-    #       f'Z:/Data/06022023/polarization/{tag}/4.007385904579106',
-    #       f'Z:/Data/06022023/polarization/{tag}/5.0463378057662815',
-    #       f'Z:/Data/06022023/polarization/{tag}/6.035815806896926']
-
-    import os
-    fp0 = '/home/jan-menno/Data/pol_angle_res1/'
-    phis = [x[0] for x in os.walk(fp0)]
-    phis = [phi + '/' for phi in phis if not phi == fp0]
-    phis.sort()
+    #fp = 'Z:/Data/06022023/polarization/1.0389519011871757'
 
     pi_factor = 0
     s = 0
@@ -126,18 +109,17 @@ def main():
     fig, ax = pl.subplots(1, 1, figsize=(10, 10))
     axes = np.array([ax])
 
-    for fp in phis:
-        gn, gx, im = plot_redshift_distribution(fp, ax, s, fig, flag=True, pi_factor=pi_factor)
-        print(fp)
+    gn, gx, im = plot_redshift_distribution(fp, ax, s, fig, flag=True, pi_factor=pi_factor)
+    print(fp)
 
-        divider = make_axes_locatable(ax)
-        cax = divider.append_axes('right', size='2%', pad=0.05)
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes('right', size='2%', pad=0.05)
 
     fig.colorbar(im, cax=cax, orientation='vertical')
 
     fig.set_tight_layout(True)
-    ax.set_xlim(-10, 10)
-    ax.set_ylim(-10, 10)
+    #ax.set_xlim(-10, 10)
+    #ax.set_ylim(-10, 10)
 
     pl.show()
     # 2.7192435792725895

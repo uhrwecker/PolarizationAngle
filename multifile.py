@@ -32,7 +32,7 @@ def get_angle(data):
 
     v = config['VELOCITIES']['orbit']
 
-    pa = sas.main(config, u1, u3, v, ft2, fr2, fth2, fphi2, keys)
+    pa = sas.main(config, u1, u3, v, ft, fr, fth, fphi, keys)
     if pa == 0.0:
         pa = sas.main(config, u1, u3, v, ft2, fr2, fth2, fphi2, keys)
 
@@ -140,8 +140,8 @@ def main(fp_data, fp_save, s):
 
 
 if __name__ == '__main__':
-    fp_data = '/home/jan-menno/Data/bigger_sample/'
-    fp_save = '/home/jan-menno/Data/pol_angle/'
+    fp_data = 'Z:/Data/06022023/bigger_sample/bigger_sample/'
+    fp_save = 'Z:/Data/06022023/polarization/'
 
     s = 0.
     #print(os.listdir('Z:/Data/'))#os.path.abspath(fp_data))
