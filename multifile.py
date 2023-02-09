@@ -5,6 +5,35 @@ import json
 import single_angle_solution as sas
 from angle import equ
 
+from tqdm import tqdm
+import multiprocessing as mp
+import pathos as pt
+
+def get_angle(data):
+    redshift_data, fp_to_json, file, ft, fr, fth, fphi, keys, s = data
+    with open(fp_to_json + file, 'r') as f:
+        config = json.load(f)
+    idx1 = np.where(redshift_data[:, 0] == config['OBSERVER']['alpha'])[0]
+    idx2 = np.where(redshift_data[:, 1] == config['OBSERVER']['beta'])[0]
+    idx = idx1[np.in1d(idx1, idx2)][0]
+
+    try:
+        rho = config['EMITTER']['rho']
+    except:
+        rho = config['EMITTER']['a']
+    T = config['EMITTER']['Theta']
+    P = config['EMITTER']['Phi']
+
+    u1 = 5 * s / (2 * rho) * np.sin(P) * np.sin(T)
+    u3 = 5 * s / (2 * rho) * np.cos(P) * np.sin(T)
+
+    v = config['VELOCITIES']['orbit']
+
+    pa = sas.main(config, u1, u3, v, ft, fr, fth, fphi, keys)
+
+    return idx, pa
+
+
 
 def evaluate(fp_to_redshift, fp_to_save, ft, fr, fth, fphi, keys, s):
     # step 0: reformalization
@@ -16,53 +45,73 @@ def evaluate(fp_to_redshift, fp_to_save, ft, fr, fth, fphi, keys, s):
     # step 2: load .csv of redshift
     redshift_data = np.loadtxt(fp_to_redshift + 'redshift.csv', delimiter=',', skiprows=1)
 
-    result = []
+    mp_data = [[redshift_data, fp_to_json, file, ft, fr, fth, fphi, keys, s] for file in filenames]
+    pool = pt.pools.ProcessPool(mp.cpu_count()-1)
+    for result in tqdm(pool.uimap(get_angle, mp_data), total=len(mp_data)):
+        idx, pa = result
+
+        redshift_data[idx][-1] = pa
+
+    np.savetxt(fp_to_save + 'polarization.csv', redshift_data, delimiter=',', header='alpha,beta,pol_angle')
+
+    #for file in filenames:
+    #    with open(fp_to_json + file, 'r') as f:
+    #        config = json.load(f)
+
+    #    pa, idx = get_angle(redshift_data, config, ft, fr, fth, fphi, keys, s)#
+
+    #    redshift_data[idx][-1] = pa
+
+    #    if not filenames == []:
+    #        filenames.remove(file)
+
+    #np.savetxt(fp_to_save + 'polarization.csv', redshift_data, delimiter=',', header='alpha,beta,pol_angle')
 
     # step 3: iterate over redshift data
-    for n, row in enumerate(redshift_data):
-        # step 3a: exclude data when there is no hit:
-        if row[-1] == 0.:
-            continue
+    #for n, row in enumerate(redshift_data):
+    #    # step 3a: exclude data when there is no hit:
+    #    if row[-1] == 0.:
+    #        continue
 
-        # step 4: load all json files one by one
-        for file in filenames:
-            with open(fp_to_json + file, 'r') as f:
-                config = json.load(f)
+    #    # step 4: load all json files one by one
+    #    for file in filenames:
+    #        with open(fp_to_json + file, 'r') as f:
+    #            config = json.load(f)
 
-            if config['OBSERVER']['alpha'] != row[0] or config['OBSERVER']['beta'] != row[1]:
-                del config
-                continue
+    #        if config['OBSERVER']['alpha'] != row[0] or config['OBSERVER']['beta'] != row[1]:
+    #            del config
+    #            continue
 
             # here goes the programming stuff
 
             # the surface velocity:
-            try:
-                rho = config['EMITTER']['rho']
-            except:
-                rho = config['EMITTER']['a']
-            T = config['EMITTER']['Theta']
-            P = config['EMITTER']['Phi']
+    #        try:
+    ##            rho = config['EMITTER']['rho']
+     #       except:
+    #            rho = config['EMITTER']['a']
+    #        T = config['EMITTER']['Theta']
+    #        P = config['EMITTER']['Phi']
 
-            u1 = 5 * s / (2 * rho) * np.sin(P) * np.sin(T)
-            u3 = 5 * s / (2 * rho) * np.cos(P) * np.sin(T)
+    #        u1 = 5 * s / (2 * rho) * np.sin(P) * np.sin(T)
+    #        u3 = 5 * s / (2 * rho) * np.cos(P) * np.sin(T)
 
-            v = config['VELOCITIES']['orbit']
+    #        v = config['VELOCITIES']['orbit']
 
-            pa = sas.main(config, u1, u3, v, ft, fr, fth, fphi, keys)
+    #        pa = sas.main(config, u1, u3, v, ft, fr, fth, fphi, keys)
 
-            result.append(pa)
+    #        result.append(pa)
 
-            break
+    #        break
 
-        row[-1] = pa
-        redshift_data[n] = row
+    #    row[-1] = pa
+    #    redshift_data[n] = row
 
-        if not filenames == []:
-            filenames.remove(file)
+    #    if not filenames == []:
+    #        filenames.remove(file)
 
-    np.savetxt(fp_to_save + 'polarization.csv', redshift_data, delimiter=',', header='alpha,beta,pol_angle')
+    #np.savetxt(fp_to_save + 'polarization.csv', redshift_data, delimiter=',', header='alpha,beta,pol_angle')
 
-    return result
+    #return result
 
 
 def main(fp_data, fp_save, s):
@@ -84,9 +133,10 @@ def main(fp_data, fp_save, s):
 
 
 if __name__ == '__main__':
-    fp_data = 'Z:/Data/s0/'
+    fp_data = 'Z:/Data/06022023/bigger_sample/bigger_sample/'
     fp_save = 'Z:/Data/pol/'
 
     s = 0.
+    #print(os.listdir('Z:/Data/'))#os.path.abspath(fp_data))
 
     main(fp_data, fp_save, s)
