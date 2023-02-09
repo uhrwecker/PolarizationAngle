@@ -6,7 +6,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
 def draw_arrows(ax, g, alpha, beta, margin):
-    interval = 129
+    interval = 12
     n_sample = np.arange(0, len(g))[::interval]
     g_sample = g[::interval]
 
@@ -37,14 +37,16 @@ def plot_redshift_distribution(fp, ax, s, fig, flag=False, pi_factor=0.):
     be = data[:, 1]
     g = data[:, 2]
     g[g == 0] = np.nan
-
-    g += pi_factor * np.pi
-
-    #g = - g
-
-    g = g % (2 * np.pi)
+    if np.nanmax(be) < 0 and 0 < np.nanmean(g) < 3:
+        g += np.pi
 
     draw_arrows(ax, g, data[:, 0], data[:, 1], margin=0.6)
+
+    g += 0.5 * np.pi
+
+    # g = - g
+
+    g = g % (2 * np.pi)
 
     # g *= 180 / np.pi
     a_gmin = al[g == np.nanmin(g)]
@@ -84,7 +86,7 @@ def plot_redshift_distribution(fp, ax, s, fig, flag=False, pi_factor=0.):
         ax.set_xlabel(r'$\alpha$')
 
     ax.scatter(0, 0, label=f's ={s}', s=0)
-    ax.legend()
+    #ax.legend()
     # ax.set_xlim(-10, 10)
     # ax.set_ylim(-10, 10)
     #ax.set_xlim(np.amin(data[:, 0]), np.amax(data[:, 0]))
@@ -104,13 +106,19 @@ def main():
 
     tag = 'arctan'
 
-    fps = [f'Z:/Data/06022023/polarization/{tag}/0.0',
-           f'Z:/Data/06022023/polarization/{tag}/1.0389519011871757',
-           f'Z:/Data/06022023/polarization/{tag}/2.028429902317819',
-           f'Z:/Data/06022023/polarization/{tag}/3.017907903448463',
-           f'Z:/Data/06022023/polarization/{tag}/4.007385904579106',
-           f'Z:/Data/06022023/polarization/{tag}/5.0463378057662815',
-           f'Z:/Data/06022023/polarization/{tag}/6.035815806896926']
+    #fps = [f'Z:/Data/06022023/polarization/{tag}/0.0',
+    #       f'Z:/Data/06022023/polarization/{tag}/1.0389519011871757',
+    #       f'Z:/Data/06022023/polarization/{tag}/2.028429902317819',
+    #       f'Z:/Data/06022023/polarization/{tag}/3.017907903448463',
+    #       f'Z:/Data/06022023/polarization/{tag}/4.007385904579106',
+    #       f'Z:/Data/06022023/polarization/{tag}/5.0463378057662815',
+    #       f'Z:/Data/06022023/polarization/{tag}/6.035815806896926']
+
+    import os
+    fp0 = '/home/jan-menno/Data/pol_angle_res1/'
+    phis = [x[0] for x in os.walk(fp0)]
+    phis = [phi + '/' for phi in phis if not phi == fp0]
+    phis.sort()
 
     pi_factor = 0
     s = 0
@@ -118,8 +126,9 @@ def main():
     fig, ax = pl.subplots(1, 1, figsize=(10, 10))
     axes = np.array([ax])
 
-    for fp in fps:
+    for fp in phis:
         gn, gx, im = plot_redshift_distribution(fp, ax, s, fig, flag=True, pi_factor=pi_factor)
+        print(fp)
 
         divider = make_axes_locatable(ax)
         cax = divider.append_axes('right', size='2%', pad=0.05)

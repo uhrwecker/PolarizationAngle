@@ -10,7 +10,10 @@ import multiprocessing as mp
 import pathos as pt
 
 def get_angle(data):
-    redshift_data, fp_to_json, file, ft, fr, fth, fphi, keys, s = data
+    redshift_data, fp_to_json, file, f1, f2, keys, s = data
+    ft, fr, fth, fphi = f1
+    ft2, fr2, fth2, fphi2 = f2
+
     with open(fp_to_json + file, 'r') as f:
         config = json.load(f)
     idx1 = np.where(redshift_data[:, 0] == config['OBSERVER']['alpha'])[0]
@@ -29,13 +32,14 @@ def get_angle(data):
 
     v = config['VELOCITIES']['orbit']
 
-    pa = sas.main(config, u1, u3, v, ft, fr, fth, fphi, keys)
+    pa = sas.main(config, u1, u3, v, ft2, fr2, fth2, fphi2, keys)
+    if pa == 0.0:
+        pa = sas.main(config, u1, u3, v, ft2, fr2, fth2, fphi2, keys)
 
     return idx, pa
 
 
-
-def evaluate(fp_to_redshift, fp_to_save, ft, fr, fth, fphi, keys, s):
+def evaluate(fp_to_redshift, fp_to_save, f1, f2, keys, s):
     # step 0: reformalization
     fp_to_json = fp_to_redshift + 'data/'
 
@@ -45,13 +49,15 @@ def evaluate(fp_to_redshift, fp_to_save, ft, fr, fth, fphi, keys, s):
     # step 2: load .csv of redshift
     redshift_data = np.loadtxt(fp_to_redshift + 'redshift.csv', delimiter=',', skiprows=1)
 
-    mp_data = [[redshift_data, fp_to_json, file, ft, fr, fth, fphi, keys, s] for file in filenames]
+    mp_data = [[redshift_data, fp_to_json, file, f1, f2, keys, s] for file in filenames]
     pool = pt.pools.ProcessPool(mp.cpu_count()-1)
     for result in tqdm(pool.uimap(get_angle, mp_data), total=len(mp_data)):
         idx, pa = result
+        #print(idx, pa)
 
         redshift_data[idx][-1] = pa
 
+    print(pa)
     np.savetxt(fp_to_save + 'polarization.csv', redshift_data, delimiter=',', header='alpha,beta,pol_angle')
 
     #for file in filenames:
@@ -116,7 +122,8 @@ def evaluate(fp_to_redshift, fp_to_save, ft, fr, fth, fphi, keys, s):
 
 def main(fp_data, fp_save, s):
     print('Starting with the analytical stuff ...')
-    ft, fr, fth, fph, keys = equ.my_fav_fun()
+    ft, fr, fth, fph, keys = equ.my_fav_fun(1)
+    ft2, fr2, fth2, fph2, keys2 = equ.my_fav_fun(0)
 
     phis = [x[0] for x in os.walk(fp_data)]
     phis = [phi for phi in phis if not (phi.endswith('data') or phi.endswith('extra'))]
@@ -126,15 +133,15 @@ def main(fp_data, fp_save, s):
     for n, file in enumerate(phis):
         phi = file[len(fp_data):-1]
         print(f'Now at {phi} ... ({n+1} / {len(phis)})')
+        print(os.path.isdir(fp_save+phi))
         if not os.path.isdir(fp_save+phi):
             os.mkdir(fp_save + phi)
-
-        res = evaluate(file, fp_save, ft, fr, fth, fph, keys, s)
+            res = evaluate(file, fp_save + phi + '/', [ft, fr, fth, fph], [ft2, fr2, fth2, fph2], keys, s)
 
 
 if __name__ == '__main__':
-    fp_data = 'Z:/Data/06022023/bigger_sample/bigger_sample/'
-    fp_save = 'Z:/Data/pol/'
+    fp_data = '/home/jan-menno/Data/bigger_sample/'
+    fp_save = '/home/jan-menno/Data/pol_angle/'
 
     s = 0.
     #print(os.listdir('Z:/Data/'))#os.path.abspath(fp_data))

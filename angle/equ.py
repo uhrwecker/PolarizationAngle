@@ -1,7 +1,7 @@
 from sympy import Symbol, solve, print_latex, simplify
 
 
-def my_fav_fun():#ft, fr, fth, fphi, r, k1, k2, kt, kr, kth, kphi, alpha, beta):
+def my_fav_fun(choice=0):#ft, fr, fth, fphi, r, k1, k2, kt, kr, kth, kphi, alpha, beta):
     ft = Symbol('f^t')
     fr = Symbol('f^r')
     fth = Symbol('f^theta')
@@ -49,10 +49,10 @@ def my_fav_fun():#ft, fr, fth, fphi, r, k1, k2, kt, kr, kth, kphi, alpha, beta):
     #res_phi = simplify(res_phi.subs(grr, 1 / alpha))
     #res_phi = simplify(res_phi.subs(gthth, r ** 2))
 
-    res_t = simplify(res[1][ft])
-    res_r = simplify(res[1][fr])
-    res_th = simplify(res[1][fth])
-    res_p = simplify(res[1][fphi])
+    res_t = res[choice][ft]#simplify(res[choice][ft])
+    res_r = res[choice][fr]#simplify(res[choice][fr])
+    res_th = res[choice][fth]#simplify(res[choice][fth])
+    res_p = res[choice][fphi]#simplify(res[choice][fphi])
 
     #print('t component:')
     #print_latex(res_t)
