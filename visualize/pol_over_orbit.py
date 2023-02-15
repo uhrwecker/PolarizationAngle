@@ -65,13 +65,13 @@ def plot_redshift_distribution(fp, ax, s, fig, flag=False, pi_factor=0.):
 
     print(np.nanmin(g), np.nanmax(g))
 
-    cmap = pl.cm.hsv
-    norm = mp.colors.Normalize(0, 2 * np.pi)
+    #cmap = pl.cm.hsv
+    #norm = mp.colors.Normalize(0, 2 * np.pi)
     # norm = mp.colors.Normalize(np.nanmin(g), np.nanmax(g))
 
     margin = 1
-    im = ax.imshow(g, extent=(np.amin(data[:, 0]) - margin, np.amax(data[:, 0]) + margin,
-                              np.amin(data[:, 1]) - margin, np.amax(data[:, 1]) + margin), norm=norm, cmap=cmap)
+    #im = ax.imshow(g, extent=(np.amin(data[:, 0]) - margin, np.amax(data[:, 0]) + margin,
+    #                          np.amin(data[:, 1]) - margin, np.amax(data[:, 1]) + margin), norm=norm, cmap=cmap)
 
     # if s == 0.001 or s == -0.0005 or s == -0.00175 or flag:
     #    divider = make_axes_locatable(ax)
@@ -79,20 +79,20 @@ def plot_redshift_distribution(fp, ax, s, fig, flag=False, pi_factor=0.):
 
     # fig.colorbar(im, cax=cax, orientation='vertical')
 
-    if s == 0.00175 or s == 0.0005 or s == -0.001:
-        ax.set_ylabel(r'$\beta$')
+    #if s == 0.00175 or s == 0.0005 or s == -0.001:
+    #    ax.set_ylabel(r'$\beta$')
 
-    if s == -0.001 or s == -0.0015 or s == -0.00175:
-        ax.set_xlabel(r'$\alpha$')
+    #if s == -0.001 or s == -0.0015 or s == -0.00175:
+    #    ax.set_xlabel(r'$\alpha$')
 
-    ax.scatter(0, 0, label=f's ={s}', s=0)
+    #ax.scatter(0, 0, label=f's ={s}', s=0)
     #ax.legend()
     # ax.set_xlim(-10, 10)
     # ax.set_ylim(-10, 10)
     #ax.set_xlim(np.amin(data[:, 0]), np.amax(data[:, 0]))
     #ax.set_ylim(np.amin(data[:, 1]), np.amax(data[:, 1]))
 
-    return np.nanmin(g), np.nanmax(g), im
+    return np.nanmin(g), np.nanmax(g), np.nanmean(g), None
 
 
 def main():
@@ -115,7 +115,7 @@ def main():
     #       f'Z:/Data/06022023/polarization/{tag}/6.035815806896926']
 
     import os
-    fp0 = '/home/jan-menno/Data/pol_angle_res1/'
+    fp0 = '/home/jan-menno/Data/Schwarzschild/pol_angle_res1/'
     phis = [x[0] for x in os.walk(fp0)]
     phis = [phi + '/' for phi in phis if not phi == fp0]
     phis.sort()
@@ -126,34 +126,36 @@ def main():
     fig, ax = pl.subplots(1, 1, figsize=(10, 10))
     axes = np.array([ax])
 
+    gmean = []
+    x = []
     for fp in phis:
-        gn, gx, im = plot_redshift_distribution(fp, ax, s, fig, flag=True, pi_factor=pi_factor)
-        print(fp)
+        gn, gx, gm, im = plot_redshift_distribution(fp, ax, s, fig, flag=True, pi_factor=pi_factor)
 
-        divider = make_axes_locatable(ax)
-        cax = divider.append_axes('right', size='2%', pad=0.05)
+        if gmean:
+            if gmean[-1] > gm:
+                gmean.append(np.nan)
+                x.append(float(fp[len(fp0):-1]) - 0.01)
 
-    fig.colorbar(im, cax=cax, orientation='vertical')
+        gmean.append(gm)
+        x.append(float(fp[len(fp0):-1]))
 
-    fig.set_tight_layout(True)
-    ax.set_xlim(-10, 10)
-    ax.set_ylim(-10, 10)
 
+    fig, ax = pl.subplots(1, 1, figsize=(13, 6))
+    ax.plot(x, gmean, label='mean pol angle')
+    ax.set_xlabel('phi_em')
+    ax.set_ylabel('pol angle')
+
+    ax.set_xlim(0, np.pi * 2)
+    ax.set_ylim(0, np.pi * 2)
+
+    ax.legend()
+    ax.grid()
+
+    pl.xticks([0.0, np.pi / 2, np.pi, 1.5 * np.pi, 2 * np.pi],
+              [str(0.0), r'$\pi / 2$', r'$\pi$', r'$3 \pi / 2$', r'$2 \pi$'])
+    pl.yticks([0.0, np.pi / 2, np.pi, 1.5 * np.pi, 2 * np.pi],
+              [str(0.0), r'$\pi / 2$', r'$\pi$', r'$3 \pi / 2$', r'$2 \pi$'])
     pl.show()
-    # 2.7192435792725895
-            # pl.savefig(f'/media/jan-menno/T7/Flat/images/{n}.png')
-
-            # ax.clear()
-            # pl.show()
-
-            # ax.clear()
-            # ax.plot(np.linspace(0, np.pi*2, num=len(gmean)), gmean)
-            # ax.set_ylim(0.5, 1)
-    #print(np.nanmin(gmin), np.nanmax(gmax))
-    #print(gmean)
-    #pl.show()
-    # pl.savefig(f'/media/jan-menno/T7/Flat/results/animation_pol/{m:03d}.png')
-
 
 if __name__ == '__main__':
     main()

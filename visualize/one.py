@@ -37,8 +37,8 @@ def plot_redshift_distribution(fp, ax, s, fig, flag=False, pi_factor=0.):
     be = data[:, 1]
     g = data[:, 2]
     g[g == 0] = np.nan
-    if np.nanmax(be) < 0 and 0 < np.nanmean(g) < 3:
-        g += np.pi
+    if np.nanmax(be) < 0:
+        g[g < 3] = g[g < 3] + np.pi
     g += 0.5 * np.pi
     draw_arrows(ax, g, data[:, 0], data[:, 1], margin=0.6)
 
@@ -96,10 +96,14 @@ def plot_redshift_distribution(fp, ax, s, fig, flag=False, pi_factor=0.):
 
 
 def main():
-    fp = 'Z:/Data/06022023/polarization/0.0'
-    fp = 'Z:/Data/06022023/polarization/1.0389519011871757'
-    fp = 'Z:/Data/06022023/polarization/2.028429902317819'
-    fp = 'Z:/Data/06022023/polarization/3.017907903448463'
+    fp = '/home/jan-menno/Data/Schwarzschild/verbessert/s0175/1.5831648018090296'
+    #fp = '/home/jan-menno/Data/spin_variation/s0175/1.5831648018090296'
+    #fp = '/home/jan-menno/Data/spin_variation/s0175/3.1663296036180593'
+    #fp = '/home/jan-menno/Data/spin_variation/s-0175/4.601072705257493'
+    #fp = '/home/jan-menno/Data/spin_variation/s-0175/6.283185307179586'
+    #fp = 'Z:/Data/06022023/polarization/1.0389519011871757'
+    #fp = 'Z:/Data/06022023/polarization/2.028429902317819'
+    #fp = 'Z:/Data/06022023/polarization/3.017907903448463'
     #fp = 'Z:/Data/06022023/polarization/1.0389519011871757'
     #fp = 'Z:/Data/06022023/polarization/1.0389519011871757'
 

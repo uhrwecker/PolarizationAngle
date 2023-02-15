@@ -18,7 +18,10 @@ def get_angle(data):
         config = json.load(f)
     idx1 = np.where(redshift_data[:, 0] == config['OBSERVER']['alpha'])[0]
     idx2 = np.where(redshift_data[:, 1] == config['OBSERVER']['beta'])[0]
-    idx = idx1[np.in1d(idx1, idx2)][0]
+    try:
+        idx = idx1[np.in1d(idx1, idx2)][0]
+    except:
+        return 0, 0.
 
     try:
         rho = config['EMITTER']['rho']
@@ -55,7 +58,8 @@ def evaluate(fp_to_redshift, fp_to_save, f1, f2, keys, s):
         idx, pa = result
         #print(idx, pa)
 
-        redshift_data[idx][-1] = pa
+        if idx != 0:
+            redshift_data[idx][-1] = pa
 
     print(pa)
     np.savetxt(fp_to_save + 'polarization.csv', redshift_data, delimiter=',', header='alpha,beta,pol_angle')
@@ -140,10 +144,10 @@ def main(fp_data, fp_save, s):
 
 
 if __name__ == '__main__':
-    fp_data = 'Z:/Data/06022023/bigger_sample/bigger_sample/'
-    fp_save = 'Z:/Data/06022023/polarization/'
+    fp_data = '/home/jan-menno/Data/Schwarzschild/bigger_sample_2/'
+    fp_save = '/home/jan-menno/Data/Schwarzschild/verbessert/s0/'
 
-    s = 0.
+    s = 0.00
     #print(os.listdir('Z:/Data/'))#os.path.abspath(fp_data))
 
     main(fp_data, fp_save, s)

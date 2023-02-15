@@ -1,12 +1,33 @@
 import numpy as np
 
 
+def matrix_g00(gv, v, gu, u1, u3):
+    g_ab = np.diag([-1, 1, 1, 1])
+    lorentz_ac = np.matrix([[gv, 0, 0, gv * v],
+                            [0, 1, 0, 0],
+                            [0, 0, 1, 0],
+                            [gv * v, 0, 0, gv]])
+    lorentz_cd = np.matrix([[gu, gu * u1, 0, gu * u3],
+                            [gu * u1, 1 + gu ** 2 * u1 ** 2 / (1 + gu), 0, gu ** 2 * u1 * u3 / (1 + gu)],
+                            [0, 0, 1, 0],
+                            [gu * u3, gu ** 2 * u1 * u3 / (1 + gu), 0, 1 + gu ** 2 * u3 ** 2 / (1 + gu)]])
+
+    lac = np.matmul(lorentz_ac, lorentz_ac)
+    lcd = np.matmul(lorentz_cd, lorentz_cd)
+    g_ac = np.matmul(lac, g_ab)
+
+    return np.matmul(lcd, g_ac)[0][0]
+
+
 def transform_f(dt, dr, dth, dphi, u1, u3, v, nu, mu1, mu2, psi, omega):
     #print('Getting that f: ')
     # 0. get gammas
 
     gu = 1 / np.sqrt(1 - u1 ** 2 - u3 ** 2)
     gv = 1 / np.sqrt(1 - v ** 2)
+
+    beta = matrix_g00(gv, v, gu, u1, u3)[0, 0]
+    #print(beta, type(beta))
 
     # 1. transform velocities to SURF reference frame
 
@@ -15,22 +36,24 @@ def transform_f(dt, dr, dth, dphi, u1, u3, v, nu, mu1, mu2, psi, omega):
     ka2 = mu2 * dth
     ka3 = - omega * nu * dt + psi * dphi
 
-    kc0 = gv * ka0 + gv * v * ka3
+    kc0 = gv * ka0 - gv * v * ka3
     kc1 = ka1
     kc2 = ka2
-    kc3 = gv * v * ka0 + gv * ka0
+    kc3 = -gv * v * ka0 + gv * ka0
 
     kd0 = gu * kc0 + gu * u1 * kc1 + gu * u3 * kc3
-    kd1 =  gu * u1 * kc0 + (1 + gu ** 2 * u1 ** 2 / (1 + gu)) * kc1 + gu ** 2 * u1 * u3 / (1 + gu) * kc3
+    kd1 = gu * u1 * kc0 + (1 + gu ** 2 * u1 ** 2 / (1 + gu)) * kc1 + gu ** 2 * u1 * u3 / (1 + gu) * kc3
     kd2 = kc2
-    kd3 =  gu * u3 * kc0 + gu ** 2 * u1 * u3 / (1 + gu) * kc1 + (1 + gu ** 2 * u3 ** 2 / (1 + gu)) * kc3
+    kd3 = gu * u3 * kc0 + gu ** 2 * u1 * u3 / (1 + gu) * kc1 + (1 + gu ** 2 * u3 ** 2 / (1 + gu)) * kc3
 
     # 2. define f in the SURF frame
     #print(-kc0**2 + kc1 ** 2 + kc3 ** 2 + kc2 ** 2)
 
-    fd0 = np.sqrt(kd2 ** 2 / (kd0 ** 2 - kd2 ** 2))
+    if kd0**2 < beta * kd2 ** 2:
+        print(kd0 ** 2 - beta * kd2 ** 2)
+    fd0 = np.sqrt(kd2 ** 2 / (kd0 ** 2 - beta * kd2 ** 2))
     fd1 = 0
-    fd2 = np.sqrt(kd0 ** 2 / (kd0 ** 2 - kd2 ** 2))
+    fd2 = np.sqrt(kd0 ** 2 / (kd0 ** 2 - beta * kd2 ** 2))
     fd3 = 0
 
     #print('Checking if definition went right: fd * kd = {} (should be nearly 0)'.format(- fd0 * kd0 + fd2 * kd2))
