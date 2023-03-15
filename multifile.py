@@ -129,11 +129,13 @@ def main(fp_data, fp_save, s):
     ft, fr, fth, fph, keys = equ.my_fav_fun(1)
     ft2, fr2, fth2, fph2, keys2 = equ.my_fav_fun(0)
 
+    print([x[0] for x in os.walk(fp_data)])
     phis = [x[0] for x in os.walk(fp_data)]
     phis = [phi for phi in phis if not (phi.endswith('data') or phi.endswith('extra'))]
     phis = [phi + '/' for phi in phis if not phi == fp_data]
     phis.sort()
 
+    print(phis)
     for n, file in enumerate(phis):
         phi = file[len(fp_data):-1]
         print(f'Now at {phi} ... ({n+1} / {len(phis)})')
@@ -144,10 +146,10 @@ def main(fp_data, fp_save, s):
 
 
 if __name__ == '__main__':
-    fp_data = '/home/jan-menno/Data/Schwarzschild/bigger_sample_2/'
-    fp_save = '/home/jan-menno/Data/Schwarzschild/verbessert/s0/'
+    fp_data = '/home/jan-menno/Data/Schwarzschild/bigger_sample_3/'
+    fp_save = '/home/jan-menno/Data/Schwarzschild/sphere/s0/'
 
-    s = 0.00
+    s = -0.00
     #print(os.listdir('Z:/Data/'))#os.path.abspath(fp_data))
 
     main(fp_data, fp_save, s)

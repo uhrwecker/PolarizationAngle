@@ -115,7 +115,7 @@ def main():
     #       f'Z:/Data/06022023/polarization/{tag}/6.035815806896926']
 
     import os
-    fp0 = '/home/jan-menno/Data/Schwarzschild/pol_angle_res1/'
+    fp0 = '/home/jan-menno/Data/Schwarzschild/orbit_less_resolution/'
     phis = [x[0] for x in os.walk(fp0)]
     phis = [phi + '/' for phi in phis if not phi == fp0]
     phis.sort()
@@ -140,7 +140,7 @@ def main():
         x.append(float(fp[len(fp0):-1]))
 
 
-    fig, ax = pl.subplots(1, 1, figsize=(13, 6))
+    fig, ax = pl.subplots(1, 1, figsize=(10, 5))
     ax.plot(x, gmean, label='mean pol angle')
     ax.set_xlabel('phi_em')
     ax.set_ylabel('pol angle')

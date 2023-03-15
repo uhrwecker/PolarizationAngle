@@ -6,14 +6,14 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
 def draw_arrows(ax, g, alpha, beta, margin):
-    interval = 12
+    interval = 109#12
     n_sample = np.arange(0, len(g))[::interval]
     g_sample = g[::interval]
 
     alpha += np.abs(np.amax(alpha) - np.amin(alpha)) / int(np.sqrt(len(g)))
     # beta += np.abs(np.amax(beta) - np.amin(beta)) / int(np.sqrt(len(g)))
 
-    factor = 0.000066  # 18
+    factor = 0.00000005#0.000066  # 18
 
     for n, sample in zip(n_sample, g_sample):
         marg = 2 * margin * n / len(n_sample) - margin
@@ -96,7 +96,8 @@ def plot_redshift_distribution(fp, ax, s, fig, flag=False, pi_factor=0.):
 
 
 def main():
-    fp = '/home/jan-menno/Data/Schwarzschild/verbessert/s0175/1.5831648018090296'
+    fp = '/home/jan-menno/Data/Schwarzschild/sphere/0/s0/0.0'
+    #fp = '/home/jan-menno/Data/Schwarzschild/verbessert/s0175/1.5831648018090296'
     #fp = '/home/jan-menno/Data/spin_variation/s0175/1.5831648018090296'
     #fp = '/home/jan-menno/Data/spin_variation/s0175/3.1663296036180593'
     #fp = '/home/jan-menno/Data/spin_variation/s-0175/4.601072705257493'
