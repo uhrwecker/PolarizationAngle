@@ -1,5 +1,5 @@
 from load import prepare
-from angle import equ, initial, final
+from angle import equ, initial, final, analytical
 from one_lightray import solver, position
 
 import numpy as np
@@ -44,6 +44,9 @@ def main(data, u1, u3, v, ft=None, fr=None, fth=None, fph=None, keys=None):
         #fph = float(fph.subs({keys[i]: values[i] for i in range(len(values))}))
         return 0.
 
+    print(ft, fr, fth, fph)
+    print(analytical.constants(35., 1.0, 0.0, dt, dr, dth, dph, K1, K2))
+
     # Step 7: Calculate polarization angle at observer:
     pol_angle = final.calculate_pol_angle(ft, fr, fth, fph, 35., 1., data['bha'], data['alpha'], data['beta'])
 
@@ -51,7 +54,7 @@ def main(data, u1, u3, v, ft=None, fr=None, fth=None, fph=None, keys=None):
 
 
 if __name__ == '__main__':
-    fp = ['Z:/Data/v0/0.0/data/-0.0_0.004194273846645237_-5.310068737755823.json',
+    fp = ['/home/jan-menno/Data/Schwarzschild/bigger_sample_3/0.0/data/0.0_0.00405671822081923_-5.30838921370405.json',
           'Z:/Data/v/0.0/data/-0.0_0.004194273846645237_-5.310068737755823.json',
           'Z:/Data/s_015/0.0/data/-0.0015_0.004194273846645237_-5.310068737755823.json']
 
