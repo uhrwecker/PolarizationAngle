@@ -1,8 +1,9 @@
 from load import prepare
-from angle import equ, initial, final, analytical
+from angle import equ, initial, final, analytical, numerical
 from one_lightray import solver, position
 
 import numpy as np
+from scipy.optimize import fsolve
 
 
 def main(data, u1, u3, v, ft=None, fr=None, fth=None, fph=None, keys=None):
@@ -14,9 +15,10 @@ def main(data, u1, u3, v, ft=None, fr=None, fth=None, fph=None, keys=None):
         ft, fr, fth, fph, keys = equ.my_fav_fun()
 
     # Step 3: Get the initial values of the Penrose-Walker constant:
-    _, _, _, _, K1, K2 = initial.compute_f_initially(data['r_em'], data['th_em'], data['bha'],
+    ft, fr, fth, fph, K1, K2 = initial.compute_f_initially(data['r_em'], data['th_em'], data['bha'],
                                                      data['dt_em'], data['dr_em'], data['dth_em'], data['dph_em'],
                                                      u1, u3, v)
+    print(numerical.kerr([ft, fr, fth, fph], data['r_em'], data['th_em'], 0., data['dt_em'], data['dr_em'], data['dth_em'], data['dph_em'], K1, K2))
 
     # Step 4: Calculate the components of the light ray
     salvation = solver.ODESolverPolAngle(data['r_em'], data['th_em'], data['ph_em'],
@@ -30,7 +32,7 @@ def main(data, u1, u3, v, ft=None, fr=None, fth=None, fph=None, keys=None):
                                                   res[:, 1], res[:, 3], res[:, 5], res[:, 7])
 
     # Step 6: Evaluate f at observer:
-    values = [35., K1, K2, dt, dr, dth, dph, -(1 - 2 / 35.), np.sin(1.) ** 2]
+    values = [35., K1, K2, dt, dr, dth, dph, (1 - 2 / 35.), np.sin(1.) ** 2]
 
     try:
         ft = float(ft.subs({keys[i]: values[i] for i in range(len(values))}))
@@ -44,11 +46,18 @@ def main(data, u1, u3, v, ft=None, fr=None, fth=None, fph=None, keys=None):
         #fph = float(fph.subs({keys[i]: values[i] for i in range(len(values))}))
         return 0.
 
-    print(ft, fr, fth, fph)
-    print(analytical.constants(35., 1.0, 0.0, dt, dr, dth, dph, K1, K2))
+    re = fsolve(numerical.kerr, [ft, fr, fth, fph], args=(35., 1., 0.0, dt, dr, dth, dph, K1, K2))
 
     # Step 7: Calculate polarization angle at observer:
     pol_angle = final.calculate_pol_angle(ft, fr, fth, fph, 35., 1., data['bha'], data['alpha'], data['beta'])
+    print(re[0], re[1], re[2], re[3])
+    print(ft, fr, fth, fph)
+    pol_angle = final.calculate_pol_angle(re[0], re[1], re[2], re[3], 35., 1., data['bha'], data['alpha'], data['beta'])
+    print(pol_angle)
+    #a = data['alpha']
+    #b = data['beta']
+    #pol_angle = np.arctan(-(b * K2 - a * K1)/(b * K1 + a * K2))
+    #print(pol_angle)
 
     return pol_angle
 

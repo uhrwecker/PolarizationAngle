@@ -37,12 +37,12 @@ def plot_redshift_distribution(fp, ax, s, fig, flag=False, pi_factor=0.):
     be = data[:, 1]
     g = data[:, 2]
     g[g == 0] = np.nan
-    if np.nanmax(be) < 0 and 0 < np.nanmean(g) < 2:
-        g += np.pi
+    #if np.nanmax(be) < 0 and 0 < np.nanmean(g) < 2:
+    #    g += np.pi
 
     draw_arrows(ax, g, data[:, 0], data[:, 1], margin=0.6)
 
-    g += 0.5 * np.pi
+    g -= 0.5 * np.pi
 
     # g = - g
 
@@ -115,7 +115,7 @@ def main():
     #       f'Z:/Data/06022023/polarization/{tag}/6.035815806896926']
 
     import os
-    fp0 = '/home/jan-menno/Data/Schwarzschild/orbit_less_resolution/'
+    fp0 = '/home/jan-menno/Data/Schwarzschild/depre/'
     phis = [x[0] for x in os.walk(fp0)]
     phis = [phi + '/' for phi in phis if not phi == fp0]
     phis.sort()

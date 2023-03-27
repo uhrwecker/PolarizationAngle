@@ -85,6 +85,6 @@ def transform_f(dt, dr, dth, dphi, u1, u3, v, nu, mu1, mu2, psi, omega):
         mu1 ** 2 * dr * fr + mu2 ** 2 * dth * fth - \
         omega * psi ** 2 * (dt * fphi + dphi * ft) + psi ** 2 * fphi * dphi
 
-    #print('Checking if definition went right: fmu * kmu = {} (should be nearly 0)'.format(st_prod))
+    print('Checking if definition went right: fmu * kmu = {} (should be nearly 0)'.format(st_prod))
 
     return ft, fr, fth, fphi

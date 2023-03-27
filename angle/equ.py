@@ -28,13 +28,13 @@ def my_fav_fun(choice=0):#ft, fr, fth, fphi, r, k1, k2, kt, kr, kth, kphi, alpha
     gtt = alpha
     grr = 1 / alpha
     gthth = r ** 2
-    gpp = r ** 2 * beta
+    gpp = r ** 2 * beta ** 2
 
 
     #term1 = fr + 1 / (r * kt) * k1 + kr / kt * ft
     #term2 = fth - 1 / (r ** 3 * kphi) * k2 + kth / kphi * fphi
     term1 = k1 - r * kt * fr + r * kr * ft
-    term2 = k2 + r ** 3 * kphi * fth - r ** 3 * kth * fphi
+    term2 = k2 + r ** 3 * beta * kphi * fth - r ** 3 * kth * fphi * beta
 
     term3 = 1 + gtt * ft ** 2 - grr * fr ** 2 - gthth * fth ** 2 - gpp * fphi ** 2
     term4 = - gtt * ft * kt + grr * fr * kr + gthth * fth * kth + gpp * fphi * kphi

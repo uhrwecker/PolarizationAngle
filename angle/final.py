@@ -20,9 +20,9 @@ def calculate_pol_angle(ft, fr, fth, fphi, robs, tobs, bha, alpha, beta):
     #print('Components in the 3-space of the observer')
     #print(f1 / f0, f2 / f0, f3 / f0)
 
-    f1 /= f0
-    f2 /= f0
-    f3 /= f0
+    #f1 /= f0
+    #f2 /= f0
+    #f3 /= f0
 
     factor_a = 1
     factor_b = 1
@@ -31,6 +31,7 @@ def calculate_pol_angle(ft, fr, fth, fphi, robs, tobs, bha, alpha, beta):
     #    factor_b *= -1
     alpha2 = alpha + factor_a * f3 / f1
     beta2 = beta + factor_b * f2 / f1
+    print(alpha, alpha2, beta, beta2)
 
     #angle = np.arctan2(1, 0) - np.arctan2(f2 / np.sqrt((f2 ** 2 + f3 ** 2) * (alpha ** 2 + beta ** 2)),
     #                                      f3 / np.sqrt((f2 ** 2 + f3 ** 2) * (alpha ** 2 + beta ** 2)))

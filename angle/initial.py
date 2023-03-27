@@ -16,6 +16,6 @@ def compute_f_initially(rem, them, bha, dt, dr, dtheta, dphi, u1, u3, v):
     ft, fr, fth, fphi = util.transform_f(dt, dr, dtheta, dphi, u1, u3, v, nu, mu1, mu2, psi, omega)
 
     K1 = rem * (dt * fr - dr * ft)
-    K2 = - rem ** 3 * (dphi * fth - dtheta * fphi)
+    K2 = - rem ** 3 * np.sin(them) * (dphi * fth - dtheta * fphi)
 
     return ft, fr, fth, fphi, K1, K2

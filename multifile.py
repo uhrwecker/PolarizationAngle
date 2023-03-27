@@ -146,7 +146,7 @@ def main(fp_data, fp_save, s):
 
 
 if __name__ == '__main__':
-    fp_data = '/home/jan-menno/Data/Schwarzschild/bigger_sample_3/'
+    fp_data = '/home/jan-menno/Data/Schwarzschild/bigger_sample/'
     fp_save = '/home/jan-menno/Data/Schwarzschild/depre/'
 
     s = -0.00
