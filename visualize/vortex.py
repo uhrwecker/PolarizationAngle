@@ -6,8 +6,8 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
 def plot_redshift_distribution(fp, ax, s, norm_color=(0, 0)):
-    data = np.loadtxt(fp + '/redshift.csv', delimiter=',', skiprows=1)
-    #data = np.loadtxt(fp + '/polarization.csv', delimiter=',', skiprows=1)
+    #data = np.loadtxt(fp + '/redshift.csv', delimiter=',', skiprows=1)
+    data = np.loadtxt(fp + '/polarization.csv', delimiter=',', skiprows=1)
     al = data[:, 0]
     be = data[:, 1]
 
@@ -26,7 +26,8 @@ def plot_redshift_distribution(fp, ax, s, norm_color=(0, 0)):
     if not normy:
         normy = np.nanmax(g)
 
-    cmap = pl.cm.coolwarm.reversed()
+    #cmap = pl.cm.coolwarm.reversed()
+    cmap = pl.hsv()
     norm = mp.colors.Normalize(normx, normy)
 
     im = ax.imshow(g, extent=(np.amin(data[:, 0]), np.amax(data[:, 0]),
@@ -85,12 +86,14 @@ def main():
     #phi = 3.141592653589793
     phi = 0.0
     phi = 4.700020505370556
-    base = '/media/jan-menno/T7/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/'
-    base2 = '/home/jan-menno/Data/Schwarzschild/depre_2/'
-    fps = [(base + f's0/{phi}', base2 + f's0/{phi}', 0.00),
-           (base + f's005/{phi}', base2 + f's005/{phi}', 0.001),
-           (base + f's015/{phi}', base2 + f's015/{phi}', 0.0015),
-           (base + f's015/{phi}', base2 + f's2/{phi}', 0.0015),
+    #base = '/media/jan-menno/T7/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/'
+    #base2 = '/home/jan-menno/Data/Schwarzschild/depre_2/'
+    base = "Z:/Polarization/Schwarzschild/"
+    base2 = "E:/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/"
+    fps = [#(base + f's0/{phi}', base2 + f's0/{phi}', 0.00),
+           #(base + f's005/{phi}', base2 + f's005/{phi}', 0.001),
+           #(base + f's015/{phi}', base2 + f's015/{phi}', 0.0015),
+           (base + f's0175/{phi}', base + f's0175/{phi}', 0.00175),
            #(f'/home/jan-menno/Data/Schwarzschild/bigger_sample_4/{phi}', base2 + f'{phi}', 0.0019)
             ]
 
@@ -102,8 +105,8 @@ def main():
         nmin = -0.8426533109584751
         nmax = 0.8426533109584751
 
-        #nmin = 0.
-        #nmax = np.pi * 2
+        nmin = 0.
+        nmax = np.pi * 2
 
         im = plot_redshift_distribution(fp0, ax, s, norm_color=(nmin, nmax))
 

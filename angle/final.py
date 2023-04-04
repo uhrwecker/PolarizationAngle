@@ -20,7 +20,7 @@ def calculate_pol_angle(ft, fr, fth, fphi, robs, tobs, bha, alpha, beta):
     #print('Components in the 3-space of the observer')
     #print(f1 / f0, f2 / f0, f3 / f0)
 
-    #f1 /= f0
+    f1 /= f0
     f2 /= f0
     f3 /= f0
 

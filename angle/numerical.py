@@ -11,7 +11,8 @@ def kerr(f, r, theta, a, kt, kr, kth, kp, kappa1, kappa2):
     omega = 2 * a * r / big_a
 
     gtt = sigma * delta / big_a - omega ** 2 * np.sin(theta) ** 2 * big_a / sigma
-    grr = sigma / delta
+    gtt = - (1 - 2 / r)
+    grr = - 1 / gtt#sigma / delta
     gthth = sigma
     gpp = np.sin(theta) ** 2 * big_a / sigma
     gtp = 0#- omega * np.sin(theta) ** 2 * big_a / sigma
@@ -19,9 +20,12 @@ def kerr(f, r, theta, a, kt, kr, kth, kp, kappa1, kappa2):
     A = kt * fr - kr * ft + a * np.sin(theta) ** 2 * (kr * fp - kp * fr)
     B = np.sin(theta) * ((r**2 + a**2) * (kp * fth - kth * fp) - a * (kt * fth - kth * ft))
 
-    term1 = 0 - gtt * kt * ft + gtp * (ft * kp + kt * fp) + grr * fr * kr + gthth * fth * kth + gpp * fp * kp
-    term2 = -1 - gtt * ft ** 2 + 2 * gtp * ft * fp + grr * fr ** 2 + gthth * fth ** 2 + gpp * fp ** 2
+    term1 = 0 + gtt * kt * ft + gtp * (ft * kp + kt * fp) + grr * fr * kr + gthth * fth * kth + gpp * fp * kp
+    term2 = -1 + gtt * ft ** 2 + 2 * gtp * ft * fp + grr * fr ** 2 + gthth * fth ** 2 + gpp * fp ** 2
     term3 = -kappa1 + r * A - a * np.cos(theta) * B
     term4 = -kappa2 - r * B - a * np.cos(theta) * B
+
+    term3 = -kappa1 + r * (kt * fr - kr * ft)
+    term4 = -kappa2 - r ** 3 * np.sin(theta) * (kp * fth - kth * fp)
 
     return term1, term2, term3, term4

@@ -244,7 +244,7 @@ def main3(dx, u1, u3, v, nu, mu1, mu2, psi, omega):
 
     fd0 = - alpha
     fd1 = 0
-    fd2 = alpha * np.abs(p_d[0] / p_d[2])
+    fd2 = alpha * p_d[0] / p_d[2]
     fd3 = 0
 
     f_d = np.array([fd0, fd1, fd2, fd3])

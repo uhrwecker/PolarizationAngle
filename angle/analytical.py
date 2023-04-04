@@ -35,7 +35,7 @@ def schwarzschild(r, theta, a, kt, kr, kth, kp, kappa1, kappa2):
     C21 = 2 * gpp * kappa2 * C4 / C3 ** 2
     C22 = gpp * C4 ** 2 / C3 ** 2
 
-    C23 = (C14 + C17 + C20) / (C16 + C19 + gthth + C22)
+    C23 = (C14 + C17 + C20) / (C16 + C19 + gthth + C22) - 1
     C24 = (C15 + C18 + C21) / (C16 + C19 + gthth + C22)
 
     fth1 = - C24 / 2 + np.sqrt(C24 ** 2 / 4 - C23)
