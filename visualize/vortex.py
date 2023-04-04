@@ -41,7 +41,7 @@ def plot_redshift_distribution(fp, ax, s, norm_color=(0, 0)):
 
 
 def draw_arrows(ax, g, alpha, beta, margin):
-    interval = 9
+    interval = 419
     scale = 1.000#01
     n_sample = np.arange(0, len(g))[::interval]
     g_sample = g[::interval]
@@ -87,12 +87,14 @@ def main():
     phi = 4.700020505370556
     base = '/media/jan-menno/T7/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/'
     base2 = '/home/jan-menno/Data/Schwarzschild/depre_2/'
-    fps = [(base + f's015/{phi}', base2 + f's015/{phi}', 0.0015),
-           (base + f's0/{phi}', base2 + f's0/{phi}', 0.00),
-           (base + f's01/{phi}', base2 + f's01/{phi}', 0.001)
+    fps = [(base + f's0/{phi}', base2 + f's0/{phi}', 0.00),
+           (base + f's005/{phi}', base2 + f's005/{phi}', 0.001),
+           (base + f's015/{phi}', base2 + f's015/{phi}', 0.0015),
+           (base + f's015/{phi}', base2 + f's2/{phi}', 0.0015),
+           #(f'/home/jan-menno/Data/Schwarzschild/bigger_sample_4/{phi}', base2 + f'{phi}', 0.0019)
             ]
 
-    fig, axes = pl.subplots(1, 3, figsize=(13, 5), sharex=True, sharey=True)
+    fig, axes = pl.subplots(1, 4, figsize=(13, 5), sharex=True, sharey=True)
 
     for fp, ax in zip(fps, axes.flatten()):
         fp0, fp1, s = fp

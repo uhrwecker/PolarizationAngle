@@ -9,6 +9,7 @@ from tqdm import tqdm
 import multiprocessing as mp
 import pathos as pt
 
+
 def get_angle(data):
     redshift_data, fp_to_json, file, f1, f2, keys, s = data
     ft, fr, fth, fphi = f1
@@ -39,6 +40,8 @@ def get_angle(data):
     if pa == 0.0:
         pa = sas.main(config, u1, u3, v, ft2, fr2, fth2, fphi2, keys)
 
+    #print(pa)
+
     return idx, pa
 
 
@@ -51,6 +54,7 @@ def evaluate(fp_to_redshift, fp_to_save, f1, f2, keys, s):
 
     # step 2: load .csv of redshift
     redshift_data = np.loadtxt(fp_to_redshift + 'redshift.csv', delimiter=',', skiprows=1)
+    redshift_data2 = np.loadtxt(fp_to_redshift + 'redshift.csv', delimiter=',', skiprows=1)
 
     mp_data = [[redshift_data, fp_to_json, file, f1, f2, keys, s] for file in filenames]
     pool = pt.pools.ProcessPool(mp.cpu_count()-1)
@@ -59,10 +63,12 @@ def evaluate(fp_to_redshift, fp_to_save, f1, f2, keys, s):
         #print(idx, pa)
 
         if idx != 0:
-            redshift_data[idx][-1] = pa
+            redshift_data[idx][-1] = pa[0]
+            redshift_data2[idx][-1] = pa[1]
 
-    print(pa)
+    #print(pa)
     np.savetxt(fp_to_save + 'polarization.csv', redshift_data, delimiter=',', header='alpha,beta,pol_angle')
+    np.savetxt(fp_to_save + 'polarization2.csv', redshift_data2, delimiter=',', header='alpha,beta,pol_angle')
 
     #for file in filenames:
     #    with open(fp_to_json + file, 'r') as f:
@@ -126,8 +132,9 @@ def evaluate(fp_to_redshift, fp_to_save, f1, f2, keys, s):
 
 def main(fp_data, fp_save, s):
     print('Starting with the analytical stuff ...')
-    ft, fr, fth, fph, keys = equ.my_fav_fun(1)
-    ft2, fr2, fth2, fph2, keys2 = equ.my_fav_fun(0)
+    #ft, fr, fth, fph, keys = equ.my_fav_fun(1)
+    #ft2, fr2, fth2, fph2, keys2 = equ.my_fav_fun(0)
+    ft, fr, fth, fph, keys, ft2, fr2, fth2, fph2 = [1, 1, 1, 1, 1, 1, 1, 1, 1]
 
     print([x[0] for x in os.walk(fp_data)])
     phis = [x[0] for x in os.walk(fp_data)]
@@ -146,10 +153,10 @@ def main(fp_data, fp_save, s):
 
 
 if __name__ == '__main__':
-    fp_data = '/home/jan-menno/Data/Schwarzschild/bigger_sample/'
-    fp_save = '/home/jan-menno/Data/Schwarzschild/depre/'
+    fp_data = '/media/jan-menno/T7/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/s0/'
+    fp_save = '/home/jan-menno/Data/Schwarzschild/depre_2/'
 
-    s = -0.00
+    s = 0.00175
     #print(os.listdir('Z:/Data/'))#os.path.abspath(fp_data))
 
     main(fp_data, fp_save, s)

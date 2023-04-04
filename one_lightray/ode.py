@@ -11,7 +11,7 @@ def geod(w, t, m=1, a=0.):
                   [t', t'', r', r'', theta', theta'', phi', phi'']
     """
 
-    t, td, r, rd, th, thd, phi, phid = w
+    t, td, r, rd, th, thd, phi, phid, ft, fr, fth, fph = w
 
     f = [td,
          tdd(a, r, th, td, rd, thd, phid),
@@ -20,7 +20,11 @@ def geod(w, t, m=1, a=0.):
          thd,
          thdd(a, r, th, td, rd, thd, phid),
          phid,
-         phidd(a, r, th, td, rd, thd, phid)
+         phidd(a, r, th, td, rd, thd, phid),
+         - 1 / (r ** 2 - 2 * r) * (td * fr + rd * ft),
+         - (r - 2) / r ** 3 * td * ft + 1 / (r ** 2 - 2 * r) * rd * fr + (r - 2) * thd * fth + (r - 2) * np.sin(th) ** 2 * phid * fph,
+         - 1 / r * (rd * fth + thd * fr) + np.sin(th) * np.cos(th) * phid * fph,
+         - 1 / r * (rd * fph + phid * fr) - 1 / np.tan(th) * (thd * fph + phid * fth)
          ]
 
     return f

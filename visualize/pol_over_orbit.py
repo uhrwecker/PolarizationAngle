@@ -42,7 +42,7 @@ def plot_redshift_distribution(fp, ax, s, fig, flag=False, pi_factor=0.):
 
     draw_arrows(ax, g, data[:, 0], data[:, 1], margin=0.6)
 
-    g -= 0.5 * np.pi
+    #g -= 0.5 * np.pi
 
     # g = - g
 
@@ -64,6 +64,8 @@ def plot_redshift_distribution(fp, ax, s, fig, flag=False, pi_factor=0.):
     # g[np.isnan(g)] = 0
 
     print(np.nanmin(g), np.nanmax(g))
+    if np.isnan(np.nanmean(g)):
+        print(fp)
 
     #cmap = pl.cm.hsv
     #norm = mp.colors.Normalize(0, 2 * np.pi)
@@ -131,15 +133,16 @@ def main():
     for fp in phis:
         gn, gx, gm, im = plot_redshift_distribution(fp, ax, s, fig, flag=True, pi_factor=pi_factor)
 
-        if gmean:
-            if gmean[-1] > gm:
-                gmean.append(np.nan)
-                x.append(float(fp[len(fp0):-1]) - 0.01)
+        #if gmean:
+        #    if gmean[-1] > gm:
+        #        gmean.append(np.nan)
+        #        x.append(float(fp[len(fp0):-1]) - 0.01)
 
         gmean.append(gm)
         x.append(float(fp[len(fp0):-1]))
 
 
+    print(x, gmean)
     fig, ax = pl.subplots(1, 1, figsize=(10, 5))
     ax.plot(x, gmean, label='mean pol angle')
     ax.set_xlabel('phi_em')

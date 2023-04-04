@@ -85,6 +85,40 @@ def transform_f(dt, dr, dth, dphi, u1, u3, v, nu, mu1, mu2, psi, omega):
         mu1 ** 2 * dr * fr + mu2 ** 2 * dth * fth - \
         omega * psi ** 2 * (dt * fphi + dphi * ft) + psi ** 2 * fphi * dphi
 
-    print('Checking if definition went right: fmu * kmu = {} (should be nearly 0)'.format(st_prod))
+    #print('Checking if definition went right: fmu * kmu = {} (should be nearly 0)'.format(st_prod))
 
     return ft, fr, fth, fphi
+
+
+def lorentz(gv, v, gu, u1, u3):
+    lorentz_ac = np.matrix([[gv, 0, 0, gv * v],
+                            [0, 1, 0, 0],
+                            [0, 0, 1, 0],
+                            [gv * v, 0, 0, gv]])
+    lorentz_cd = np.matrix([[gu, gu * u1, 0, gu * u3],
+                            [gu * u1, 1 + gu ** 2 * u1 ** 2 / (1 + gu), 0, gu ** 2 * u1 * u3 / (1 + gu)],
+                            [0, 0, 1, 0],
+                            [gu * u3, gu ** 2 * u1 * u3 / (1 + gu), 0, 1 + gu ** 2 * u3 ** 2 / (1 + gu)]])
+
+    #lac = np.matmul(lorentz_ac, lorentz_ac)
+    #lcd = np.matmul(lorentz_cd, lorentz_cd)
+
+    return np.matmul(lorentz_cd, lorentz_ac)
+
+
+def lorentz_inv(gv, v, gu, u1, u3):
+    lorentz_ac = np.matrix([[gv, 0, 0, -gv * v],
+                            [0, 1, 0, 0],
+                            [0, 0, 1, 0],
+                            [-gv * v, 0, 0, gv]])
+
+    lorentz_cd = np.matrix([[gu, -gu * u1, 0, -gu * u3],
+                            [-gu * u1, 1 + gu ** 2 * u1 ** 2 / (1 + gu), 0, gu ** 2 * u1 * u3 / (1 + gu)],
+                            [0, 0, 1, 0],
+                            [-gu * u3, gu ** 2 * u1 * u3 / (1 + gu), 0, 1 + gu ** 2 * u3 ** 2 / (1 + gu)]])
+
+    #lac = np.matmul(lorentz_ac, lorentz_ac)
+    #lcd = np.matmul(lorentz_cd, lorentz_cd)
+
+    return np.matmul(lorentz_cd, lorentz_ac)
+

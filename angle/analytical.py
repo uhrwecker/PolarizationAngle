@@ -1,6 +1,57 @@
 import numpy as np
 
 
+def schwarzschild(r, theta, a, kt, kr, kth, kp, kappa1, kappa2):
+    a = 0
+    gtt = - (1 - 2 / r)
+    grr = 1 / (1 - 2 / r)
+    gthth = r ** 2
+    gpp = r ** 2 * np.sin(theta) ** 2
+
+    C1 = r * kt
+    C2 = r * kr
+    C3 = r ** 3 * kth
+    C4 = r ** 3 * kp
+
+    C5 = gtt * kt
+    C6 = grr * kr
+    C7 = gthth * kth
+    C8 = gpp * kp
+
+    C9 = C6 / C1 * kappa1 + C8 / C3 * kappa2
+    C10 = C7 + C8 * C4 / C3
+    C11 = - (C5 + C6 * C2 / C1)
+
+    C12 = kappa1 + C2 * C9 / C11
+    C13 = C2 * C10 / C11
+
+    C14 = gtt * C9 ** 2 / C11 ** 2
+    C15 = 2 * gtt * C9 * C10 / C11 ** 2
+    C16 = gtt * C10 ** 2 / C11 ** 2
+    C17 = grr * C12 ** 2 / C1 ** 2
+    C18 = 2 * grr * C12 * C13 / C1 ** 2
+    C19 = grr * C13 ** 2 / C1 ** 2
+    C20 = gpp * kappa2 ** 2 / C3 ** 2
+    C21 = 2 * gpp * kappa2 * C4 / C3 ** 2
+    C22 = gpp * C4 ** 2 / C3 ** 2
+
+    C23 = (C14 + C17 + C20) / (C16 + C19 + gthth + C22)
+    C24 = (C15 + C18 + C21) / (C16 + C19 + gthth + C22)
+
+    fth1 = - C24 / 2 + np.sqrt(C24 ** 2 / 4 - C23)
+    fth2 = - C24 / 2 - np.sqrt(C24 ** 2 / 4 - C23)
+
+    ft1 = C9 / C11 + C10 / C11 * fth1
+    ft2 = C9 / C11 + C10 / C11 * fth2
+
+    fr1 = C12 / C1 + C13 / C1 * fth1
+    fr2 = C12 / C1 + C13 / C1 * fth2
+
+    fp1 = kappa2 / C3 + C4 / C3 * fth1
+    fp2 = kappa2 / C3 + C4 / C3 * fth2
+
+    return (ft1, fr1, fth1, fp1), (ft2, fr2, fth2, fp2)
+
 def constants(r, theta, a, kt, kr, kth, kp, kappa1, kappa2):
     a = 0
     sigma = r ** 2 + a ** 2 * np.cos(theta) ** 2
@@ -14,18 +65,18 @@ def constants(r, theta, a, kt, kr, kth, kp, kappa1, kappa2):
     #gpp = np.sin(theta) ** 2 * big_a / sigma
     #gtp = - 2 * omega * np.sin(theta) ** 2 * big_a / sigma
 
-    gtt = -1 + 2 / r
+    gtt = -(1 - 2 / r)
     grr = -1 / gtt
     gthth = r ** 2
     gpp = r ** 2 * np.sin(theta) ** 2
     gtp = 0
 
-    C1 = - gtt * kt + gtp * kp
+    C1 = gtt * kt + gtp * kp
     C2 = grr * kr
     C3 = gthth * kth
     C4 = gpp * kp + gtp * kt
 
-    C5 = - gtt
+    C5 = gtt
     C6 = 2 * gtp
     C7 = grr
     C8 = gthth
@@ -71,9 +122,6 @@ def constants(r, theta, a, kt, kr, kth, kp, kappa1, kappa2):
     C41 = C30 ** 2 * C37
     C42 = C28 * C36 + C27
     C43 = C28 ** 2 * C37
-
-    print(gtt * (C38 - np.sqrt(C39))**2 + grr * (C40 - np.sqrt(C41))**2 +
-          gthth * (C36 - np.sqrt(C37)) ** 2 + gpp * (C42 - np.sqrt(C43))**2)
 
     return (C38 + np.sqrt(C39), C40 + np.sqrt(C41), C36 + np.sqrt(C37), C42 + np.sqrt(C43)), \
            (C38 - np.sqrt(C39), C40 - np.sqrt(C41), C36 - np.sqrt(C37), C42 - np.sqrt(C43))

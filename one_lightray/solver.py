@@ -66,12 +66,13 @@ class ODESolverPolAngle:
         self.relerr = relerr
         self.sigma = np.linspace(self.start, self.stop, num=self.num)
 
-    def solve(self):
+    def solve(self, ft, fr, fth, fph):
         """
             Main routine for solving with the previously specified initial conditions
             :return: iter; [sigma, result] where sigma is the array of affine parameter, and result includes all [x, x']
         """
-        psi = np.array([self.t0, self.dt, self.robs, self.dr, self.tobs, self.dtheta, self.pobs, self.dphi])
+        psi = np.array([self.t0, self.dt, self.robs, self.dr, self.tobs, self.dtheta, self.pobs, self.dphi,
+                        ft, fr, fth, fph])
 
         with stdout_redirected():
             result = odeint(ode.geod, psi, self.sigma, args=(self.m, self.bha), atol=self.abserr, rtol=self.relerr)
