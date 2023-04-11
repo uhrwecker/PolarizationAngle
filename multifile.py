@@ -154,9 +154,9 @@ def main(fp_data, fp_save, s):
 
 if __name__ == '__main__':
     #fp_data = '/media/jan-menno/T7/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/s0/'
-    fp_data = "E:/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/s0/"
+    fp_data = "E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/s0/"
     #fp_save = '/home/jan-menno/Data/Schwarzschild/depre_2/'
-    fp_save = "Z:/Polarization/Schwarzschild/s0175/"
+    fp_save = "Z:/Polarization/Schwarzschild/phipi/stereo/"
 
     s = 0.00175
     #print(os.listdir('Z:/Data/'))#os.path.abspath(fp_data))

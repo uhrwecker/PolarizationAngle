@@ -11,19 +11,19 @@ def main(data, u1, u3, v, ft=None, fr=None, fth=None, fph=None, keys=None):
     data = prepare.prepare_data(data)
 
     # Step 2:
-    if type(None) == type(ft):
-        ft3, fr3, fth3, fph3, keys = equ.my_fav_fun()
+    #if type(None) == type(ft):
+    #    ft3, fr3, fth3, fph3, keys = equ.my_fav_fun()
 
     # Step 3: Get the initial values of the Penrose-Walker constant:
     ft, fr, fth, fph, K1, K2 = initial.compute_f_initially(data['r_em'], data['th_em'], data['bha'],
                                                      data['dt_em'], data['dr_em'], data['dth_em'], data['dph_em'],
                                                      u1, u3, v)
-    print(ft, fr, fth, fph)
+    #print(ft, fr, fth, fph)
     #reh = fsolve(numerical.kerr, [ft, fr, fth, fph], args=(data['r_em'], data['th_em'], data['bha'],
     #                                                  data['dt_em'], data['dr_em'], data['dth_em'], data['dph_em'], K1,
     #                                                  K2))
     #print(reh)
-    #print(numerical.kerr(reh, data['r_em'], data['th_em'], data['bha'],
+    #print(numerical.kerr([ft, fr, fth, fph], data['r_em'], data['th_em'], data['bha'],
     #                                                  data['dt_em'], data['dr_em'], data['dth_em'], data['dph_em'], K1,
     #                                                  K2))
     #print(data['alpha'], data['beta'])
@@ -52,7 +52,7 @@ def main(data, u1, u3, v, ft=None, fr=None, fth=None, fph=None, keys=None):
                                                   res[:, 8], res[:, 9], res[:, 10], res[:, 11])
     #print(- (1 - 2 / 35) * ft ** 2 + 1 / (1 - 2 / 35) * fr ** 2 + 35 ** 2 * fth ** 2 + 35 ** 2 * np.sin(1) ** 2 * fph ** 2)
     #print(- (1 - 2 / 35) * ft * dt + 1 / (1 - 2 / 35) * fr * dr + 35 ** 2 * fth * dth + 35 ** 2 * np.sin(1) ** 2 * fph * dph)
-    print(ft, fr, fth, fph)
+    #print(ft, fr, fth, fph)
     #print('HMMMM')
     K1 = 35 * (dt * fr - dr * ft)
     K2 = - 35 ** 3 * np.sin(1) * (dph * fth - dth * fph)
@@ -63,13 +63,13 @@ def main(data, u1, u3, v, ft=None, fr=None, fth=None, fph=None, keys=None):
     if himwich_x < 0:
         himwich = 2 * np.pi - himwich
 
-    print(numerical.kerr([ft, fr, fth, fph], 35., 1., 0., dt, dr, dth, dph, K1, K2))
-    print(final.calculate_pol_angle(ft, fr, fth, fph, 35., 1., data['bha'], data['alpha'], data['beta']))
-    re = fsolve(numerical.kerr, [ft, fr, fth, fph], args=(35., 1., 0.0, dt, dr, dth, dph, K1, K2))
-    print(re)
-    print(numerical.kerr(re, 35., 1., 0., dt, dr, dth, dph, K1, K2))
+   # print(numerical.kerr([ft, fr, fth, fph], 35., 1., 0., dt, dr, dth, dph, K1, K2))
+    #print(final.calculate_pol_angle(ft, fr, fth, fph, 35., 1., data['bha'], data['alpha'], data['beta'], dt, dr, dth, dph))
+    #re = fsolve(numerical.kerr, [ft, fr, fth, fph], args=(35., 1., 0.0, dt, dr, dth, dph, K1, K2))
+    #print(re)
+    #print(numerical.kerr(re, 35., 1., 0., dt, dr, dth, dph, K1, K2))
         #np.arctan(-(data['beta'] * K2 - data['alpha'] * K1) / (data['beta'] * K1 + data['alpha'] * K2) )
-    return final.calculate_pol_angle(ft, fr, fth, fph, 35., 1., data['bha'], data['alpha'], data['beta']), himwich, ft, fr, fth, fph
+    return final.calculate_pol_angle(ft, fr, fth, fph, 35., 1., data['bha'], data['alpha'], data['beta'],dt, dr, dth, dph), himwich, ft, fr, fth, fph
     #print(final.calculate_pol_angle(ft, fr, fth, fph, 35., 1., data['bha'], data['alpha'], data['beta']))
 
 
@@ -123,9 +123,18 @@ def main(data, u1, u3, v, ft=None, fr=None, fth=None, fph=None, keys=None):
 
 if __name__ == '__main__':
     import json
-    fp = ["E:/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/s0/4.700020505370556/data/-0.0_-9.274632265003175_0.06328533788104738.json",
-          "E:/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/s0/4.700020505370556/data/-0.0_-9.274632265003175_0.06320562215004391.json",
-          "E:/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/s0/4.700020505370556/data/-0.0_-9.274632265003175_0.06324548001554564.json"]
+    #fp = ["E:/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/s0/4.700020505370556/data/-0.0_-9.274632265003175_0.06328533788104738.json",
+    #      "E:/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/s0/4.700020505370556/data/-0.0_-9.274632265003175_0.06320562215004391.json",
+    #      "E:/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/s0/4.700020505370556/data/-0.0_-9.274632265003175_0.06324548001554564.json"]
+    fp = ["E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/s0/3.141592653589793/data/0.0_0.003216327538174798_7.899462050150876.json",
+          "E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/s0/3.141592653589793/data/0.0_0.003216327538174798_7.899542532379293.json",
+          "E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/s0/3.141592653589793/data/0.0_0.003296809766591781_7.899462050150876.json",
+          "E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/s0/3.141592653589793/data/0.0_0.003296809766591781_7.899542532379293.json",
+          "E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/s0/3.141592653589793/data/0.0_-0.0033027329636008598_7.902117963688637.json"]
+    #0.0_0.003216327538174798_7.899462050150876
+    #0.0_0.003216327538174798_7.899542532379293
+    #0.0_0.003135845309757815_7.899542532379293
+    #0.0_0.003135845309757815_7.899462050150876
     s = 0.00175
 
     for f in fp:

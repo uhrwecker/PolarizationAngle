@@ -13,20 +13,21 @@ def plot_redshift_distribution(fp, ax, s, norm_color=(0, 0)):
 
     g = data[:, 2]
 
+    #g[g != 0] += np.pi / 2
     g[g == 0] = np.nan
 
     n = int(np.sqrt(len(g)))
-    g = g.reshape(n, n).T[::-1] - 1
+    g = g.reshape(n, n).T[::-1] #- 1
 
     print(np.nanmin(g), np.nanmax(g))
 
     normx, normy = norm_color
-    if not normx:
-        normx = np.nanmin(g)
-    if not normy:
-        normy = np.nanmax(g)
+    #if not normx:
+    #    normx = np.nanmin(g)
+    #if not normy:
+    #    normy = np.nanmax(g)
 
-    #cmap = pl.cm.coolwarm.reversed()
+    cmap = pl.cm.coolwarm.reversed()
     cmap = pl.hsv()
     norm = mp.colors.Normalize(normx, normy)
 
@@ -42,7 +43,7 @@ def plot_redshift_distribution(fp, ax, s, norm_color=(0, 0)):
 
 
 def draw_arrows(ax, g, alpha, beta, margin):
-    interval = 419
+    interval = 111
     scale = 1.000#01
     n_sample = np.arange(0, len(g))[::interval]
     g_sample = g[::interval]
@@ -83,21 +84,21 @@ def plot_pol_angle(fp, ax, s, fig, flag=False, pi_factor=0.):
 
 
 def main():
-    #phi = 3.141592653589793
-    phi = 0.0
-    phi = 4.700020505370556
+    phi = 3.141592653589793
+    #phi = 0.0
+    #phi = 4.700020505370556
     #base = '/media/jan-menno/T7/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/'
     #base2 = '/home/jan-menno/Data/Schwarzschild/depre_2/'
-    base = "Z:/Polarization/Schwarzschild/"
-    base2 = "E:/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/"
-    fps = [#(base + f's0/{phi}', base2 + f's0/{phi}', 0.00),
-           #(base + f's005/{phi}', base2 + f's005/{phi}', 0.001),
-           #(base + f's015/{phi}', base2 + f's015/{phi}', 0.0015),
+    base = "Z:/Polarization/Schwarzschild/phipi/"
+    base2 = "E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/"
+    fps = [(base + f'stereo/{phi}', base + f'stereo/{phi}', 0.00175),
+           (base + f's0/{phi}', base + f's0/{phi}', 0.00),
+           (base + f's-0175/{phi}', base + f's-0175/{phi}', -0.00175),
            (base + f's0175/{phi}', base + f's0175/{phi}', 0.00175),
            #(f'/home/jan-menno/Data/Schwarzschild/bigger_sample_4/{phi}', base2 + f'{phi}', 0.0019)
             ]
 
-    fig, axes = pl.subplots(1, 4, figsize=(13, 5), sharex=True, sharey=True)
+    fig, axes = pl.subplots(1, len(fps), figsize=(13, 5), sharex=True, sharey=True)
 
     for fp, ax in zip(fps, axes.flatten()):
         fp0, fp1, s = fp
@@ -108,10 +109,10 @@ def main():
         nmin = 0.
         nmax = np.pi * 2
 
-        im = plot_redshift_distribution(fp0, ax, s, norm_color=(nmin, nmax))
+        im = plot_redshift_distribution(fp1, ax, s, norm_color=(nmin, nmax))
 
         try:
-            plot_pol_angle(fp1, ax, s, fig)
+            plot_pol_angle(fp0, ax, s, fig)
         except:
             print('NOPE')
             plot_pol_angle(fp0, ax, s, fig)

@@ -4,7 +4,7 @@ import contextlib
 import os
 import sys
 
-from one_lightray import ode
+from one_lightray import ode, ss
 
 
 def fileno(file_or_fd):

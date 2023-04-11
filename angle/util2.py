@@ -242,14 +242,17 @@ def main3(dx, u1, u3, v, nu, mu1, mu2, psi, omega):
     alpha = -(gv * gu + gv * v * gu * u3) ** 2 + (gu * u1) ** 2 + (p_d[0] / p_d[2]) ** 2 + (gv * v * gu + gv * gu * u3) ** 2
     alpha = 1 / np.sqrt(alpha)
 
+    #print(-(gv * gu + gv * v * gu * u3) ** 2 , (gu * u1) ** 2 , (gv * v * gu + gv * gu * u3) ** 2)
+
     fd0 = - alpha
     fd1 = 0
     fd2 = alpha * p_d[0] / p_d[2]
     fd3 = 0
 
     f_d = np.array([fd0, fd1, fd2, fd3])
-
+    #print(f_d)
     f_b = b_up_d_down(f_d, u1, u3, gu)
+    #print(f_b)
     f_a = a_up_b_down(f_b, v, gv)
 
     #print(f_a, alpha)
