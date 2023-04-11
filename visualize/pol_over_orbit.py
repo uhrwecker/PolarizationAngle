@@ -42,7 +42,7 @@ def plot_redshift_distribution(fp, ax, s, fig, flag=False, pi_factor=0.):
 
     draw_arrows(ax, g, data[:, 0], data[:, 1], margin=0.6)
 
-    #g -= 0.5 * np.pi
+    g -= 0.5 * np.pi
 
     # g = - g
 
@@ -117,7 +117,7 @@ def main():
     #       f'Z:/Data/06022023/polarization/{tag}/6.035815806896926']
 
     import os
-    fp0 = '/home/jan-menno/Data/Schwarzschild/depre/'
+    fp0 = '/home/jan-menno/Data/Schwarzschild/depre_2/s0/'
     phis = [x[0] for x in os.walk(fp0)]
     phis = [phi + '/' for phi in phis if not phi == fp0]
     phis.sort()
@@ -133,10 +133,12 @@ def main():
     for fp in phis:
         gn, gx, gm, im = plot_redshift_distribution(fp, ax, s, fig, flag=True, pi_factor=pi_factor)
 
-        #if gmean:
-        #    if gmean[-1] > gm:
-        #        gmean.append(np.nan)
-        #        x.append(float(fp[len(fp0):-1]) - 0.01)
+        if gmean:
+            if gmean[-1] > gm:
+                gmean.append(np.nan)
+                x.append(float(x[-1] + 0.0001))#float(fp[len(fp0):-1]) - 0.01)
+                gmean.append(0)
+                x.append(float(x[-1] + 0.0002))
 
         gmean.append(gm)
         x.append(float(fp[len(fp0):-1]))

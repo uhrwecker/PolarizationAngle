@@ -33,4 +33,7 @@ def calculate_pol_angle(ft, fr, fth, fphi, robs, tobs, bha, alpha, beta, dt, dr,
     if yp < y0:
         y *= -1
     angle = -np.arctan2(y, x)
+
+    if angle < 0:
+        angle += np.pi * 2
     return angle
