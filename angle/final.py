@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def new_angles(robs, dr, dth, dph, ft, fr, fth, fphi, mu1, mu2, psi, epsilon):
     zeta = - 1 / np.sqrt(1 - 2 / robs)
     cos_theta = - mu1 * (dr + epsilon * fr) / zeta
@@ -11,6 +12,7 @@ def new_angles(robs, dr, dth, dph, ft, fr, fth, fphi, mu1, mu2, psi, epsilon):
     yp = 2 * (1 - cos_theta) / sin_theta * cos_phi
 
     return xp, yp
+
 
 def calculate_pol_angle(ft, fr, fth, fphi, robs, tobs, bha, alpha, beta, dt, dr, dth, dph):
     sigma = robs ** 2 + bha ** 2 * np.cos(tobs) ** 2
@@ -24,7 +26,7 @@ def calculate_pol_angle(ft, fr, fth, fphi, robs, tobs, bha, alpha, beta, dt, dr,
     omega = 2 * robs * bha / A
 
     x0, y0 = new_angles(robs, dr, dth, dph, ft, fr, fth, fphi, mu1, mu2, psi, 0)
-    xp, yp = new_angles(robs, dr, dth, dph, ft, fr, fth, fphi, mu1, mu2, psi, 0.01)
+    xp, yp = new_angles(robs, dr, dth, dph, ft, fr, fth, fphi, mu1, mu2, psi, 0.00001)
 
     x = np.abs(x0 - xp)
     if xp < x0:

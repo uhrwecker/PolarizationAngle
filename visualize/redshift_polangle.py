@@ -45,7 +45,7 @@ def plot_redshift_distribution(fp, ax, s, norm_color=(0, 0)):
 
 
 def draw_arrows(ax, g, alpha, beta, margin):
-    interval = 217
+    interval = 717
     scale = 1.000#01
     n_sample = np.arange(0, len(g))[::interval]
     g_sample = g[::interval]
@@ -86,26 +86,23 @@ def plot_pol_angle(fp, ax, s, fig, flag=False, pi_factor=0.):
 
 
 def main():
-    phi = 3.141592653589793
-    #phi = 0.0
-    #phi = 4.700020505370556
-    #base = '/media/jan-menno/T7/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/'
-    #base2 = '/home/jan-menno/Data/Schwarzschild/depre_2/'
-    base = "Z:/Polarization/Schwarzschild/phipi/"
-    base2 = "E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/"
-    fps = [(base + f'stereo/{phi}', base + f'stereo/{phi}', 0.00175),
-           (base + f'stereo0/{phi}', base + f'stereo0/{phi}', 0.00),
-           (base + f's-0175/{phi}', base + f's-0175/{phi}', -0.00175),
-           (base + f's0175/{phi}', base + f's0175/{phi}', 0.00175),
-           #(f'/home/jan-menno/Data/Schwarzschild/bigger_sample_4/{phi}', base2 + f'{phi}', 0.0019)
-            ]
-    fps = [("Z:/Polarization/Schwarzschild/sphere/s01/0.0", "E:/Schwarzschild/higher_resolution/redshift_dist_0_sphere/s01/0.0", 0.0),
-           ("Z:/Polarization/Schwarzschild/sphere/s01/1.5831648018090296", "E:/Schwarzschild/higher_resolution/redshift_dist_pi-2_sphere/s01/1.5831648018090296", 0.0),
-           ("Z:/Polarization/Schwarzschild/sphere/s01/3.141592653589793", "E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/s01/3.141592653589793", 0.0),
-           ("Z:/Polarization/Schwarzschild/sphere/s01/4.700020505370556", "E:/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/s01/4.700020505370556", 0.0)
+    phi = (0.0, '0')
+    #phi = (1.5831648018090296, 'pi-2')
+    #phi = (3.141592653589793, 'pi')
+    #phi = (4.700020505370556, '3pi-2')
+
+    fps = [(f"Z:/Polarization/Schwarzschild/sphere/s0175/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s0175/{phi[0]}", 0.00175),
+           (f"Z:/Polarization/Schwarzschild/sphere/s015/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s015/{phi[0]}", 0.00150),
+           (f"Z:/Polarization/Schwarzschild/sphere/s01/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s01/{phi[0]}", 0.00100),
+           (f"Z:/Polarization/Schwarzschild/sphere/s005/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s005/{phi[0]}", 0.00050),
+           (f"Z:/Polarization/Schwarzschild/sphere/s0/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s0/{phi[0]}", 0.00000),
+           (f"Z:/Polarization/Schwarzschild/sphere/s-005/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s-005/{phi[0]}", -0.00050),
+           (f"Z:/Polarization/Schwarzschild/sphere/s-01/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s-01/{phi[0]}", -0.00100),
+           (f"Z:/Polarization/Schwarzschild/sphere/s-015/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s-015/{phi[0]}", -0.00150),
+           (f"Z:/Polarization/Schwarzschild/sphere/s-0175/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s-0175/{phi[0]}", -0.00175)
            ]
 
-    fig, axes = pl.subplots(1, len(fps), figsize=(13, 5))#, sharex=True, sharey=True)
+    fig, axes = pl.subplots(3, 3, figsize=(9, 9), sharex=True, sharey=True)
 
     for fp, ax in zip(fps, axes.flatten()):
         fp0, fp1, s = fp
@@ -124,16 +121,16 @@ def main():
             print('NOPE')
             plot_pol_angle(fp0, ax, s, fig)
 
-        if fp == fps[-1]:
+        if fp == fps[-1] or fp == fps[2] or fp == fps[5]:
             divider = make_axes_locatable(ax)
             cax = divider.append_axes('right', size='2%', pad=0.05)
 
             fig.colorbar(im, cax=cax, orientation='vertical')
 
-        if fp == fps[0]:
+        if fp == fps[0] or fp == fps[3] or fp == fps[6]:
             ax.set_ylabel(r'$\beta$')
 
-        if fp == fps[-1]:
+        if fp == fps[-1] or fp == fps[-2] or fp == fps[-3]:
             ax.set_xlabel(r'$\alpha$')
 
     fig.set_tight_layout(True)
