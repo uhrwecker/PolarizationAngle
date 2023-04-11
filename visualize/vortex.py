@@ -12,6 +12,8 @@ def plot_redshift_distribution(fp, ax, s, norm_color=(0, 0)):
     be = data[:, 1]
 
     g = data[:, 2]
+    g[g != 0] -= np.pi / 2
+    g[g < 0] += np.pi * 2
 
     #g[g != 0] += np.pi / 2
     g[g == 0] = np.nan
@@ -92,7 +94,7 @@ def main():
     base = "Z:/Polarization/Schwarzschild/phipi/"
     base2 = "E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/"
     fps = [(base + f'stereo/{phi}', base + f'stereo/{phi}', 0.00175),
-           (base + f's0/{phi}', base + f's0/{phi}', 0.00),
+           (base + f'stereo0/{phi}', base + f'stereo0/{phi}', 0.00),
            (base + f's-0175/{phi}', base + f's-0175/{phi}', -0.00175),
            (base + f's0175/{phi}', base + f's0175/{phi}', 0.00175),
            #(f'/home/jan-menno/Data/Schwarzschild/bigger_sample_4/{phi}', base2 + f'{phi}', 0.0019)
