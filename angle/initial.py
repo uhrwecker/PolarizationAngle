@@ -13,10 +13,7 @@ def compute_f_initially(rem, them, bha, dt, dr, dtheta, dphi, u1, u3, v):
     psi = np.sqrt(A / sigma) * np.sin(them)
     omega = 2 * rem * bha / A
 
-    #ft, fr, fth, fphi = util.transform_f(dt, dr, dtheta, dphi, u1, u3, v, nu, mu1, mu2, psi, omega)
-    #print(ft, fr, fth, fphi)
     ft, fr, fth, fphi = util2.main3(np.array([dt, dr, dtheta, dphi]), u1, u3, v, nu, mu1, mu2, psi, omega)
-    #print(ft, fr, fth, fphi)
 
     K1 = rem * (dt * fr - dr * ft)
     K2 = - rem ** 3 * np.sin(them) * (dphi * fth - dtheta * fphi)

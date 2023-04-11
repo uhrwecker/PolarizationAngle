@@ -60,74 +60,13 @@ def evaluate(fp_to_redshift, fp_to_save, f1, f2, keys, s):
     pool = pt.pools.ProcessPool(mp.cpu_count()-1)
     for result in tqdm(pool.uimap(get_angle, mp_data), total=len(mp_data)):
         idx, pa = result
-        #print(idx, pa)
 
         if idx != 0:
             redshift_data[idx][-1] = pa[0]
             redshift_data2[idx][-1] = pa[1]
 
-    #print(pa)
     np.savetxt(fp_to_save + 'polarization.csv', redshift_data, delimiter=',', header='alpha,beta,pol_angle')
     np.savetxt(fp_to_save + 'polarization2.csv', redshift_data2, delimiter=',', header='alpha,beta,pol_angle')
-
-    #for file in filenames:
-    #    with open(fp_to_json + file, 'r') as f:
-    #        config = json.load(f)
-
-    #    pa, idx = get_angle(redshift_data, config, ft, fr, fth, fphi, keys, s)#
-
-    #    redshift_data[idx][-1] = pa
-
-    #    if not filenames == []:
-    #        filenames.remove(file)
-
-    #np.savetxt(fp_to_save + 'polarization.csv', redshift_data, delimiter=',', header='alpha,beta,pol_angle')
-
-    # step 3: iterate over redshift data
-    #for n, row in enumerate(redshift_data):
-    #    # step 3a: exclude data when there is no hit:
-    #    if row[-1] == 0.:
-    #        continue
-
-    #    # step 4: load all json files one by one
-    #    for file in filenames:
-    #        with open(fp_to_json + file, 'r') as f:
-    #            config = json.load(f)
-
-    #        if config['OBSERVER']['alpha'] != row[0] or config['OBSERVER']['beta'] != row[1]:
-    #            del config
-    #            continue
-
-            # here goes the programming stuff
-
-            # the surface velocity:
-    #        try:
-    ##            rho = config['EMITTER']['rho']
-     #       except:
-    #            rho = config['EMITTER']['a']
-    #        T = config['EMITTER']['Theta']
-    #        P = config['EMITTER']['Phi']
-
-    #        u1 = 5 * s / (2 * rho) * np.sin(P) * np.sin(T)
-    #        u3 = 5 * s / (2 * rho) * np.cos(P) * np.sin(T)
-
-    #        v = config['VELOCITIES']['orbit']
-
-    #        pa = sas.main(config, u1, u3, v, ft, fr, fth, fphi, keys)
-
-    #        result.append(pa)
-
-    #        break
-
-    #    row[-1] = pa
-    #    redshift_data[n] = row
-
-    #    if not filenames == []:
-    #        filenames.remove(file)
-
-    #np.savetxt(fp_to_save + 'polarization.csv', redshift_data, delimiter=',', header='alpha,beta,pol_angle')
-
-    #return result
 
 
 def main(fp_data, fp_save, s):
@@ -159,6 +98,5 @@ if __name__ == '__main__':
     fp_save = "Z:/Polarization/Schwarzschild/phipi/stereo/"
 
     s = 0.00175
-    #print(os.listdir('Z:/Data/'))#os.path.abspath(fp_data))
 
     main(fp_data, fp_save, s)
