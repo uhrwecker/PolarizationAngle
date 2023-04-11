@@ -75,7 +75,7 @@ class ODESolverPolAngle:
                         ft, fr, fth, fph])
 
         with stdout_redirected():
-            result = odeint(ss.geod, psi, self.sigma, args=(self.m, self.bha), atol=self.abserr, rtol=self.relerr)
+            result = odeint(ode.geod, psi, self.sigma, args=(self.m, self.bha), atol=self.abserr, rtol=self.relerr)
 
         return self.sigma, result
 
