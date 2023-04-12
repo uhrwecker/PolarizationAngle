@@ -13,6 +13,10 @@ def geod(w, t, m=1, a=0.):
 
     t, td, r, rd, th, thd, phi, phid, ft, fr, fth, fph = w
 
+    sigma = r ** 2 + a ** 2 * np.cos(th) ** 2
+    delta = r ** 2 - 2 * r + a ** 2
+    A = (r ** 2 + a ** 2) ** 2 - a ** 2 * delta * np.sin(th) ** 2
+
     f = [td,
          tdd(a, r, th, td, rd, thd, phid),
          rd,
@@ -21,13 +25,59 @@ def geod(w, t, m=1, a=0.):
          thdd(a, r, th, td, rd, thd, phid),
          phid,
          phidd(a, r, th, td, rd, thd, phid),
-         - 1 / (r ** 2 - 2 * r) * (td * fr + rd * ft),
-         - (r - 2) / r ** 3 * td * ft + 1 / (r ** 2 - 2 * r) * rd * fr + (r - 2) * thd * fth + (r - 2) * np.sin(th) ** 2 * phid * fph,
-         - 1 / r * (rd * fth + thd * fr) + np.sin(th) * np.cos(th) * phid * fph,
-         - 1 / r * (rd * fph + phid * fr) - 1 / np.tan(th) * (thd * fph + phid * fth)
+         dft(ft, fr, fth, fph, a, r, th, td, rd, thd, phid, sigma, delta, A),
+         dfr(ft, fr, fth, fph, a, r, th, td, rd, thd, phid, sigma, delta, A),
+         dfth(ft, fr, fth, fph, a, r, th, td, rd, thd, phid, sigma, delta, A),
+         dfph(ft, fr, fth, fph, a, r, th, td, rd, thd, phid, sigma, delta, A)
          ]
 
     return f
+
+
+def dft(ft, fr, fth, fph, a, r, th, td, rd, thd, phid, sigma, delta, A):
+    term_1 = 2 * (r ** 2 + a ** 2) * (r ** 2 - a ** 2 * np.cos(th) ** 2) / (2 * sigma ** 2 * delta)
+    term_2 = - 2 * a ** 2 * r * np.sin(th) * np.cos(th) / sigma ** 2
+    term_3 = 2 * a ** 3 * r * np.sin(th) ** 3 * np.cos(th) / sigma ** 2
+    term_4 = 2 * a * np.sin(th) ** 2 * (a ** 2 * np.cos(th) ** 2 * (a ** 2 - r ** 2) - r ** 2 * (a ** 2 + 3 * r ** 2))
+    term_4 /= 2 * sigma ** 2 * delta
+
+    return - term_1 * (ft * rd + fr * td) - term_2 * (ft * thd + fth * td) - term_3 * (
+                fth * phid + fph * thd) - term_4 * (fr * phid + fph * rd)
+
+
+def dfr(ft, fr, fth, fph, a, r, th, td, rd, thd, phid, sigma, delta, A):
+    term_1 = 2 * delta * (r ** 2 - a ** 2 * np.cos(th) ** 2) / (2 * sigma ** 3)
+    term_2 = - delta * 2 * a * np.sin(th) ** 2 * (r ** 2 - a ** 2 * np.cos(th) ** 2) / (2 * sigma ** 3)
+    term_3 = (2 * r * a ** 2 * np.sin(th) ** 2 - 2 * (r ** 2 - a ** 2 * np.cos(th) ** 2)) / (2 * sigma * delta)
+    term_4 = - a ** 2 * np.sin(th) * np.cos(th) / sigma
+    term_5 = - r * delta / sigma
+    term_6 = delta * np.sin(th) ** 2 / (2 * sigma ** 3) * (- 2 * r * sigma ** 2 + 2 * a ** 2 * np.sin(th) ** 2 * (r ** 2 - a ** 2 * np.cos(th) ** 2))
+
+    return - term_1 * (ft * td) - term_2 * (ft * phid + fph * td) - term_3 * (fr * rd) - term_4 * (fr * thd + fth * rd) \
+           - term_5 * (fth * thd) - term_6 * (fph * phid)
+
+
+def dfth(ft, fr, fth, fph, a, r, th, td, rd, thd, phid, sigma, delta, A):
+    term_1 = - 2 * a ** 2 * r * np.sin(th) * np.cos(th) / sigma ** 3
+    term_2 = 2 * a * r * (r ** 2 + a ** 2) * np.sin(th) * np.cos(th) / sigma ** 3
+    term_3 = a ** 2 * np.sin(th) * np.cos(th) / (sigma * delta)
+    term_4 = r / sigma
+    term_5 = - a ** 2 * np.sin(th) * np.cos(th) / sigma
+    term_6 = - np.sin(th) * np.cos(th) / sigma ** 3 * (A * sigma + (r ** 2 + a ** 2) * 2 * a ** 2 * r * np.sin(th) ** 2)
+
+    return - term_1 * (ft * td) - term_2 * (ft * phid + fph * td) - term_3 * (fr * rd) - term_4 * (fr * thd + fth * rd) \
+           - term_5 * (fth * thd) - term_6 * (fph * phid)
+
+
+def dfph(ft, fr, fth, fph, a, r, th, td, rd, thd, phid, sigma, delta, A):
+    term_1 = 2 * a * (r ** 2 - a ** 2 * np.cos(th) ** 2) / (2 * sigma ** 2 * delta)
+    term_2 = - 2 * a * r / (np.tan(th) * sigma ** 2)
+    term_3 = (sigma ** 2 + 2 * a ** 2 * r * np.sin(th) ** 2) / (np.tan(th) * sigma ** 2)
+    term_4 = (2 * r * sigma ** 2 + 2 * (a ** 4 * np.sin(th) ** 2 * np.cos(th) ** 2 - r ** 2 * (sigma + r ** 2 + a ** 2)))
+    term_4 /= 2 * sigma ** 2 * delta
+
+    return - term_1 * (ft * rd + fr * td) - term_2 * (ft * thd + fth * td) - term_3 * (
+            fth * phid + fph * thd) - term_4 * (fr * phid + fph * rd)
 
 
 # second order derivatives:
@@ -39,15 +89,6 @@ def tdd(a, r, th, td, rd, thd, phid):
     sum2 = 2 * gphph(a, r, th) * (2 * td * ddtau_tt(a, r, th, thd, rd) + phid * ddtau_tph(a, r, th, thd, rd))
 
     return factor * (sum1 - sum2)
-    # factor = gphph(a, r, th) / (gtt(a, r, th) * gphph(a, r, th) - gtph(a, r, th) ** 2)
-
-    # sum1 = gtph(a, r, th) / gphph(a, r, th) * (td * ddtau_tph(a, r, th, thd, rd) +
-
-
-#                                               phid * ddtau_phph(a, r, th, thd, rd))
-# sum2 = td * ddtau_tt(a, r, th, thd, rd) + phid * ddtau_tph(a, r, th, thd, rd)
-
-# return factor * (sum1 - sum2)
 
 
 def rdd(a, r, th, td, rd, thd, phid):
