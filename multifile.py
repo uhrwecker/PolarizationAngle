@@ -95,15 +95,15 @@ if __name__ == '__main__':
     #fp_data = '/home/jan-menno/Data/Schwarzschild/bigger_sample/'
     fp_data = "E:/Schwarzschild/higher_resolution/redshift_dist_0_sphere/s0/"
     #fp_save = '/home/jan-menno/Data/Schwarzschild/depre_2/s00/'
-    fp_save = "Z:/Polarization/Schwarzschild/sphere/s005/"
+    fp_save = "Z:/Polarization/Schwarzschild/maclaurin/s-005/"
 
-    fps = [ "E:/Schwarzschild/higher_resolution/redshift_dist_0_sphere/s0/",
-            "E:/Schwarzschild/higher_resolution/redshift_dist_pi-2_sphere/s0/",
-            "E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/s0/",
-            "E:/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/s0/"
+    fps = [ "E:/Schwarzschild/higher_resolution/redshift_dist_0_maclaurin/s005/",
+            #"E:/Schwarzschild/higher_resolution/redshift_dist_pi-2_sphere/s0/",
+            #"E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/s0/",
+            #"E:/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/s0/"
             ]
 
-    s = 0.0005
+    s = -0.0005
 
     for fp_data in fps:
         main(fp_data, fp_save, s)

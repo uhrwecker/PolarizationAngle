@@ -102,6 +102,26 @@ def main():
            (f"Z:/Polarization/Schwarzschild/sphere/s-0175/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s-0175/{phi[0]}", -0.00175)
            ]
 
+    fps = [(f"Z:/Polarization/Schwarzschild/maclaurin/s0175/{phi[0]}",
+            f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_maclaurin/s0175/{phi[0]}", 0.00175),
+           (f"Z:/Polarization/Schwarzschild/maclaurin/s015/{phi[0]}",
+            f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_maclaurin/s015/{phi[0]}", 0.00150),
+           (f"Z:/Polarization/Schwarzschild/maclaurin/s01/{phi[0]}",
+            f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_maclaurin/s01/{phi[0]}", 0.00100),
+           (f"Z:/Polarization/Schwarzschild/maclaurin/s005/{phi[0]}",
+            f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_maclaurin/s005/{phi[0]}", 0.00050),
+           (f"Z:/Polarization/Schwarzschild/maclaurin/s0/{phi[0]}",
+            f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_maclaurin/s0/{phi[0]}", 0.00000),
+           (f"Z:/Polarization/Schwarzschild/maclaurin/s-005/{phi[0]}",
+            f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_maclaurin/s-005/{phi[0]}", -0.00050),
+           (f"Z:/Polarization/Schwarzschild/maclaurin/s-01/{phi[0]}",
+            f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_maclaurin/s-01/{phi[0]}", -0.00100),
+           (f"Z:/Polarization/Schwarzschild/maclaurin/s-015/{phi[0]}",
+            f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_maclaurin/s-015/{phi[0]}", -0.00150),
+           (f"Z:/Polarization/Schwarzschild/maclaurin/s-0175/{phi[0]}",
+            f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_maclaurin/s-0175/{phi[0]}", -0.00175)
+           ]
+
     fig, axes = pl.subplots(3, 3, figsize=(9, 9), sharex=True, sharey=True)
 
     for fp, ax in zip(fps, axes.flatten()):
