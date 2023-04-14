@@ -49,12 +49,14 @@ if __name__ == '__main__':
           "E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/s0/3.141592653589793/data/0.0_0.003216327538174798_7.899542532379293.json",
           "E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/s0/3.141592653589793/data/0.0_0.003296809766591781_7.899462050150876.json",
           "E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/s0/3.141592653589793/data/0.0_0.003296809766591781_7.899542532379293.json",
-          "E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/s0/3.141592653589793/data/0.0_-0.0033027329636008598_7.902117963688637.json"]
+          "E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/s0/3.141592653589793/data/0.0_-0.0033027329636008598_7.902117963688637.json",
+          "E:/Kerr/sphere/a-05/s0/0.0/data/0.0_0.0844223612456581_-5.96819178536354.json",
+          "E:/Kerr/sphere/a05/s0/0.0/data/-0.0_-0.112655296415279_-4.570204354737.json"]
     #0.0_0.003216327538174798_7.899462050150876
     #0.0_0.003216327538174798_7.899542532379293
     #0.0_0.003135845309757815_7.899542532379293
     #0.0_0.003135845309757815_7.899462050150876
-    s = 0.00175
+    s = 0.00#175
 
     for f in fp:
         with open(f, 'r') as ff:
@@ -73,5 +75,5 @@ if __name__ == '__main__':
         print('----------------------------')
         print('Starting run for ')
         print('{}\n'.format(f))
-        main(config, u1, u3, v)
+        print(main(config, u1, u3, v))
         print('----------------------------')

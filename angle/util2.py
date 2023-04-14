@@ -61,10 +61,13 @@ def main3(dx, u1, u3, v, nu, mu1, mu2, psi, omega):
 
     #print('Start debugging ...')
     # redefine k as the momentum, i.e.:
+    if dx[0] < 0:
+        dx[0] *= -1
     dx[0] = (- nu ** 2 + omega ** 2 * psi ** 2) * dx[0] - psi ** 2 * omega * dx[3]
     dx[1] *= mu1 ** 2
     dx[2] *= mu2 ** 2
     dx[3] = - psi ** 2 * omega * dx[0] + psi ** 2 * dx[3]
+
 
     p_a = to_ZAMO_down(dx, nu, mu1, mu2, omega, psi)
     p_b = a_up_b_down(p_a, v, gv)

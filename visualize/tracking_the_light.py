@@ -32,7 +32,7 @@ def draw_arrows(ax, g, alpha, beta, margin):
 
 
 def plot_redshift_distribution(fp, ax, s, fig, flag=False, pi_factor=0.):
-    data = np.loadtxt(fp + '/polarization.csv', delimiter=',', skiprows=1)
+    data = np.loadtxt(fp + '/redshift.csv', delimiter=',', skiprows=1)
     al = data[:, 0]
     be = data[:, 1]
     g = data[:, 2]
@@ -40,11 +40,13 @@ def plot_redshift_distribution(fp, ax, s, fig, flag=False, pi_factor=0.):
     #if np.nanmax(be) < 0 and 0 < np.nanmean(g) < 2:
     #    g += np.pi
 
-    draw_arrows(ax, g, data[:, 0], data[:, 1], margin=0.6)
+    return np.nanmean(al), np.nanmean(be)
+
+    #draw_arrows(ax, g, data[:, 0], data[:, 1], margin=0.6)
 
 
 
-    g -= np.pi / 2
+    #g -= np.pi / 2
 
     # g = - g
 
@@ -120,7 +122,7 @@ def main():
 
     import os
     fp0 = '/home/jan-menno/Data/Schwarzschild/depre_2/s0/'
-    fp0 = "Z:/Polarization/Kerr/a-05/"
+    fp0 = "E:/Kerr/sphere/a09/s0/"
     phis = [x[0] for x in os.walk(fp0)]
     phis = [phi + '/' for phi in phis if not phi == fp0]
     phis.sort()
@@ -131,38 +133,30 @@ def main():
     fig, ax = pl.subplots(1, 1, figsize=(10, 10))
     axes = np.array([ax])
 
-    gmean = []
-    x = []
+    amean = []
+    bmean = []
     for fp in phis:
-        gn, gx, gm, im = plot_redshift_distribution(fp, ax, s, fig, flag=True, pi_factor=pi_factor)
+        if not 'data' in fp:
+            am, bm = plot_redshift_distribution(fp, ax, s, fig, flag=True, pi_factor=pi_factor)
 
-        if gmean:
-            if gmean[-1] > gm:
-                gmean.append(np.nan)
-                x.append(float(x[-1] + 0.0001))#float(fp[len(fp0):-1]) - 0.01)
-                gmean.append(0)
-                x.append(float(x[-1] + 0.0002))
+            amean.append(am)
+            bmean.append(bm)
 
-        gmean.append(gm)
-        x.append(float(fp[len(fp0):-1]))
+    fig, ax = pl.subplots(1, 1, figsize=(10, 10))
+    ax.plot(amean, bmean, label='direct image')
+    ax.set_xlabel(r'$\alpha$')
+    ax.set_ylabel(r'$\beta$')
 
-
-    print(x, gmean)
-    fig, ax = pl.subplots(1, 1, figsize=(10, 5))
-    ax.plot(x, gmean, label='mean pol angle')
-    ax.set_xlabel('phi_em')
-    ax.set_ylabel('pol angle')
-
-    ax.set_xlim(0, np.pi * 2)
-    ax.set_ylim(0, np.pi * 2)
+    #ax.set_xlim(0, np.pi * 2)
+    #ax.set_ylim(0, np.pi * 2)
 
     ax.legend()
     ax.grid()
 
-    pl.xticks([0.0, np.pi / 2, np.pi, 1.5 * np.pi, 2 * np.pi],
-              [str(0.0), r'$\pi / 2$', r'$\pi$', r'$3 \pi / 2$', r'$2 \pi$'])
-    pl.yticks([0.0, np.pi / 2, np.pi, 1.5 * np.pi, 2 * np.pi],
-              [str(0.0), r'$\pi / 2$', r'$\pi$', r'$3 \pi / 2$', r'$2 \pi$'])
+    #pl.xticks([0.0, np.pi / 2, np.pi, 1.5 * np.pi, 2 * np.pi],
+    #          [str(0.0), r'$\pi / 2$', r'$\pi$', r'$3 \pi / 2$', r'$2 \pi$'])
+    #pl.yticks([0.0, np.pi / 2, np.pi, 1.5 * np.pi, 2 * np.pi],
+    #          [str(0.0), r'$\pi / 2$', r'$\pi$', r'$3 \pi / 2$', r'$2 \pi$'])
     pl.show()
 
 if __name__ == '__main__':
