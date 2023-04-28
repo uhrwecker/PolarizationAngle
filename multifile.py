@@ -31,8 +31,8 @@ def get_angle(data):
     T = config['EMITTER']['Theta']
     P = config['EMITTER']['Phi']
 
-    u1 = 5 * s / (2 * rho) * np.sin(P) * np.sin(T)
-    u3 = 5 * s / (2 * rho) * np.cos(P) * np.sin(T)
+    u1 = -5 * s / (2 * rho) * np.sin(P) * np.sin(T)
+    u3 = -5 * s / (2 * rho) * np.cos(P) * np.sin(T)
 
     v = config['VELOCITIES']['orbit']
 
@@ -79,6 +79,7 @@ def main(fp_data, fp_save, s):
     phis = [x[0] for x in os.walk(fp_data)]
     phis = [phi for phi in phis if not (phi.endswith('data') or phi.endswith('extra'))]
     phis = [phi + '/' for phi in phis if not phi == fp_data]
+    phis = [phi for phi in phis if not '3.116855' in phi]
     phis.sort()
 
     print(phis)
@@ -92,18 +93,72 @@ def main(fp_data, fp_save, s):
 
 
 if __name__ == '__main__':
-    #fp_data = '/home/jan-menno/Data/Schwarzschild/bigger_sample/'
-    fp_data = "E:/Schwarzschild/higher_resolution/redshift_dist_0_sphere/s0/"
-    #fp_save = '/home/jan-menno/Data/Schwarzschild/depre_2/s00/'
-    fp_save = "Z:/Polarization/Kerr/a05/"
+    a = "a05"
 
-    fps = [ "E:/Kerr/sphere/a05/s0/",
-            #"E:/Schwarzschild/higher_resolution/redshift_dist_0_sphere/s0/",
-            #"E:/Schwarzschild/higher_resolution/redshift_dist_pi_sphere/s0/",
-            #"E:/Schwarzschild/higher_resolution/redshift_dist_3pi-2_sphere/s0/"
-            ]
+    #ss = [0.00175, 0.0015, 0.001, 0.0005, 0., -0.0005, -0.001, -0.0015, -0.00175]
 
-    s = 0.000#5
+    #fpd = [f"Z:/Polarization/Kerr/redshift/sphere/{a}/s0/",
+    #       f"Z:/Polarization/Kerr/redshift/sphere/{a}/s0/",
+    #       f"Z:/Polarization/Kerr/redshift/sphere/{a}/s0/",
+    #       f"Z:/Polarization/Kerr/redshift/sphere/{a}/s0/",
+    #       f"Z:/Polarization/Kerr/redshift/sphere/{a}/s0/",
+    #       f"Z:/Polarization/Kerr/redshift/sphere/{a}/s0/",
+    #       f"Z:/Polarization/Kerr/redshift/sphere/{a}/s0/",
+    #       f"Z:/Polarization/Kerr/redshift/sphere/{a}/s0/",
+    #       f"Z:/Polarization/Kerr/redshift/sphere/{a}/s0/"]
 
-    for fp_data in fps:
+    #fpss = [f"Z:/Polarization/Kerr/polarization/sphere_adv/{a}/s0175/",
+    #        f"Z:/Polarization/Kerr/polarization/sphere_adv/{a}/s015/",
+    #        f"Z:/Polarization/Kerr/polarization/sphere_adv/{a}/s01/",
+    #        f"Z:/Polarization/Kerr/polarization/sphere_adv/{a}/s005/",
+    #        f"Z:/Polarization/Kerr/polarization/sphere_adv/{a}/s0/",
+    #        f"Z:/Polarization/Kerr/polarization/sphere_adv/{a}/s-005/",
+    #        f"Z:/Polarization/Kerr/polarization/sphere_adv/{a}/s-01/",
+    #        f"Z:/Polarization/Kerr/polarization/sphere_adv/{a}/s-015/",
+    #        f"Z:/Polarization/Kerr/polarization/sphere_adv/{a}/s-0175/"]
+
+    ss = [0.00175, 0.0015, 0.001, 0.0005, -0.0005, -0.001, -0.0015, -0.00175]
+
+    #fpd = [f"Z:/Polarization/Kerr/redshift/maclaurin/{a}/s0175/",
+    #       f"Z:/Polarization/Kerr/redshift/maclaurin/{a}/s015/",
+    #       f"Z:/Polarization/Kerr/redshift/maclaurin/{a}/s01/",
+    #       f"Z:/Polarization/Kerr/redshift/maclaurin/{a}/s005/",
+    #       f"Z:/Polarization/Kerr/redshift/maclaurin/{a}/s005/",
+    #       f"Z:/Polarization/Kerr/redshift/maclaurin/{a}/s01/",
+    #       f"Z:/Polarization/Kerr/redshift/maclaurin/{a}/s015/",
+    #       f"Z:/Polarization/Kerr/redshift/maclaurin/{a}/s0175/"]
+
+    #fpss = [f"Z:/Polarization/Kerr/polarization/maclaurin_adv/{a}/s0175/",
+    #        f"Z:/Polarization/Kerr/polarization/maclaurin_adv/{a}/s015/",
+    #        f"Z:/Polarization/Kerr/polarization/maclaurin_adv/{a}/s01/",
+    #        f"Z:/Polarization/Kerr/polarization/maclaurin_adv/{a}/s005/",
+    #        f"Z:/Polarization/Kerr/polarization/maclaurin_adv/{a}/s-005/",
+    #        f"Z:/Polarization/Kerr/polarization/maclaurin_adv/{a}/s-01/",
+    #        f"Z:/Polarization/Kerr/polarization/maclaurin_adv/{a}/s-015/",
+    #        f"Z:/Polarization/Kerr/polarization/maclaurin_adv/{a}/s-0175/"]
+
+    fpd = [f"Z:/Polarization/Schwarzschild/redshift/s0175/",
+           f"Z:/Polarization/Schwarzschild/redshift/s015/",
+           f"Z:/Polarization/Schwarzschild/redshift/s01/",
+           f"Z:/Polarization/Schwarzschild/redshift/s005/",
+           f"Z:/Polarization/Schwarzschild/redshift/s005/",
+           f"Z:/Polarization/Schwarzschild/redshift/s01/",
+           f"Z:/Polarization/Schwarzschild/redshift/s015/",
+           f"Z:/Polarization/Schwarzschild/redshift/s0175/"]
+
+    fpss = [f"Z:/Polarization/Schwarzschild/maclaurin/s0175/",
+            f"Z:/Polarization/Schwarzschild/maclaurin/s015/",
+            f"Z:/Polarization/Schwarzschild/maclaurin/s01/",
+            f"Z:/Polarization/Schwarzschild/maclaurin/s005/",
+            f"Z:/Polarization/Schwarzschild/maclaurin/s-005/",
+            f"Z:/Polarization/Schwarzschild/maclaurin/s-01/",
+            f"Z:/Polarization/Schwarzschild/maclaurin/s-015/",
+            f"Z:/Polarization/Schwarzschild/maclaurin/s-0175/"]
+
+    for fp_save, fp_data, s in zip(fpss, fpd, ss):
         main(fp_data, fp_save, s)
+
+    #s = 0.0005
+
+    #for fp_data in fps:
+    #    main(fp_data, fp_save, s)

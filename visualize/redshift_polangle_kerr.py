@@ -5,7 +5,21 @@ import matplotlib as mp
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
-def plot_redshift_distribution(fp, ax, s, norm_color=(0, 0)):
+def clean_data(g, norm):
+    limit = 0.6
+    gmin, gmax = norm
+    for m, row in enumerate(g):
+        for n in range(len(row)-1):
+            if not np.isnan(row[n]):
+                if np.abs(row[n+1] - row[n]) > limit or row[n+1] < gmin or row[n+1] > gmax:
+                    row[n+1] = row[n]
+                if np.abs(row[n+1] - row[n]) > limit or row[n+1] < gmin or row[n+1] > gmax:
+                    g[m][n+1] = g[m+1][n]
+
+    return g
+
+
+def plot_redshift_distribution(fp, ax, s, norm_color=(0, 0), margin=0.01):
     data = np.loadtxt(fp + '/redshift.csv', delimiter=',', skiprows=1)
     #data = np.loadtxt(fp + '/polarization.csv', delimiter=',', skiprows=1)
     al = data[:, 0]
@@ -20,6 +34,8 @@ def plot_redshift_distribution(fp, ax, s, norm_color=(0, 0)):
 
     n = int(np.sqrt(len(g)))
     g = g.reshape(n, n).T[::-1] - 1
+
+    g = clean_data(g, norm_color)
 
     print(np.nanmin(g), np.nanmax(g))
 
@@ -38,14 +54,14 @@ def plot_redshift_distribution(fp, ax, s, norm_color=(0, 0)):
 
     ax.scatter(0, 0, label=f's = {s}', s=0)
     ax.legend()
-    ax.set_xlim(np.amin(data[:, 0]), np.amax(data[:, 0]))
-    ax.set_ylim(np.amin(data[:, 1]), np.amax(data[:, 1]))
+    ax.set_xlim(np.amin(data[:, 0]).round(3), np.amax(data[:, 0]).round(3))
+    ax.set_ylim(np.amin(data[:, 1]).round(3), np.amax(data[:, 1]).round(3))
 
     return im
 
 
 def draw_arrows(ax, g, alpha, beta, margin):
-    interval = 717
+    interval = 684#717
     scale = 1.000#01
     n_sample = np.arange(0, len(g))[::interval]
     g_sample = g[::interval]
@@ -63,6 +79,11 @@ def draw_arrows(ax, g, alpha, beta, margin):
         sample -= np.pi / 2
         if sample < 0:
             sample += 2 * np.pi
+
+        #print(sample)
+        #if np.abs(sample - np.pi) < 0.2:
+        #    print(sample)
+        #    sample += 1.6
 
         a = alpha[n]  # + marg
         b = beta[n]  # + marg
@@ -88,20 +109,34 @@ def plot_pol_angle(fp, ax, s, fig, flag=False, pi_factor=0.):
 def main():
     phi = (0.0, '0')
     #phi = (1.5831648018090296, 'pi-2')
-    #phi = (3.141592653589793, 'pi')
+    #phi = (3.14159265359, 'pi')#(3.141592653589793, 'pi')
     #phi = (4.700020505370556, '3pi-2')
 
-    fps = [(f"Z:/Polarization/Schwarzschild/sphere/s0175/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s0175/{phi[0]}", 0.00175),
-           (f"Z:/Polarization/Schwarzschild/sphere/s015/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s015/{phi[0]}", 0.00150),
-           (f"Z:/Polarization/Schwarzschild/sphere/s01/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s01/{phi[0]}", 0.00100),
-           (f"Z:/Polarization/Schwarzschild/sphere/s005/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s005/{phi[0]}", 0.00050),
-           #(f"Z:/Polarization/Schwarzschild/sphere/s0/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s0/{phi[0]}", 0.00000),
-           (f"Z:/Polarization/Kerr/a0/{phi[0]}",
-            f"E:/Kerr/sphere/a0/{phi[0]}", 0.00000),
-           (f"Z:/Polarization/Schwarzschild/sphere/s-005/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s-005/{phi[0]}", -0.00050),
-           (f"Z:/Polarization/Schwarzschild/sphere/s-01/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s-01/{phi[0]}", -0.00100),
-           (f"Z:/Polarization/Schwarzschild/sphere/s-015/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s-015/{phi[0]}", -0.00150),
-           (f"Z:/Polarization/Schwarzschild/sphere/s-0175/{phi[0]}", f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_sphere/s-0175/{phi[0]}", -0.00175)
+    a = 'a-09'
+    typ = 'sphere'
+    #typ = 'maclaurin'
+
+    xn = 5
+    yn = 6
+
+    fps = [(f"Z:/Polarization/Kerr/polarization/{typ}_adv/{a}/s0175/{phi[0]}",
+            f"Z:/Polarization/Kerr/redshift/{typ}_adv/{a}/s0175/{phi[0]}", 0.00175),
+           (f"Z:/Polarization/Kerr/polarization/{typ}_adv/{a}/s015/{phi[0]}",
+            f"Z:/Polarization/Kerr/redshift/{typ}_adv/{a}/s015/{phi[0]}", 0.00150),
+           (f"Z:/Polarization/Kerr/polarization/{typ}_adv/{a}/s01/{phi[0]}",
+            f"Z:/Polarization/Kerr/redshift/{typ}_adv/{a}/s01/{phi[0]}", 0.00100),
+           (f"Z:/Polarization/Kerr/polarization/{typ}_adv/{a}/s005/{phi[0]}",
+            f"Z:/Polarization/Kerr/redshift/{typ}_adv/{a}/s005/{phi[0]}", 0.00050),
+           (f"Z:/Polarization/Kerr/polarization/sphere_adv/{a}/s0/{phi[0]}",
+            f"Z:/Polarization/Kerr/redshift/sphere_adv/{a}/s0/{phi[0]}", 0.00000),
+           (f"Z:/Polarization/Kerr/polarization/{typ}_adv/{a}/s-005/{phi[0]}",
+            f"Z:/Polarization/Kerr/redshift/{typ}_adv/{a}/s-005/{phi[0]}", -0.00050),
+           (f"Z:/Polarization/Kerr/polarization/{typ}_adv/{a}/s-01/{phi[0]}",
+            f"Z:/Polarization/Kerr/redshift/{typ}_adv/{a}/s-01/{phi[0]}", -0.00100),
+           (f"Z:/Polarization/Kerr/polarization/{typ}_adv/{a}/s-015/{phi[0]}",
+            f"Z:/Polarization/Kerr/redshift/{typ}_adv/{a}/s-015/{phi[0]}", -0.00150),
+           (f"Z:/Polarization/Kerr/polarization/{typ}_adv/{a}/s-0175/{phi[0]}",
+            f"Z:/Polarization/Kerr/redshift/{typ}_adv/{a}/s-0175/{phi[0]}", -0.00175)
            ]
 
     #fps = [(f"Z:/Polarization/Schwarzschild/maclaurin/s0175/{phi[0]}",
@@ -124,13 +159,14 @@ def main():
     #        f"E:/Schwarzschild/higher_resolution/redshift_dist_{phi[1]}_maclaurin/s-0175/{phi[0]}", -0.00175)
     #       ]
 
-    fig, axes = pl.subplots(3, 3, figsize=(9, 9))#, sharex=True, sharey=True)
+    fig, axes = pl.subplots(3, 3, figsize=(12, 12), sharex=True, sharey=True)
+    pl.rcParams.update({'font.size': 12})
 
     for fp, ax in zip(fps, axes.flatten()):
         fp0, fp1, s = fp
 
-        nmin = -0.8426533109584751
-        nmax = 0.8426533109584751
+        nmin = -0.95
+        nmax = 0.95
 
         #nmin = 0.
         #nmax = np.pi * 2
@@ -151,12 +187,28 @@ def main():
 
         if fp == fps[0] or fp == fps[3] or fp == fps[6]:
             ax.set_ylabel(r'$\beta$')
+            ax.tick_params(axis='both', which='major', labelsize=12)
+            ax.tick_params(axis='both', which='minor', labelsize=12)
+            ax.yaxis.label.set_size(12)
 
         if fp == fps[-1] or fp == fps[-2] or fp == fps[-3]:
             ax.set_xlabel(r'$\alpha$')
+            ax.tick_params(axis='both', which='major', labelsize=12)
+            ax.tick_params(axis='both', which='minor', labelsize=12)
+            ax.xaxis.label.set_size(12)
 
     fig.set_tight_layout(True)
-    pl.show()
+    from matplotlib.ticker import FormatStrFormatter
+
+    pl.subplots_adjust(wspace=1.8)
+
+    ax.xaxis.set_major_locator(pl.MaxNLocator(xn))
+    ax.yaxis.set_major_locator(pl.MaxNLocator(yn))
+    ax.yaxis.set_major_formatter(FormatStrFormatter('%.3f'))
+    ax.xaxis.set_major_formatter(FormatStrFormatter('%.3f'))
+
+    pl.savefig(f'E:/Results/Kerr/{a}_{typ}_{phi[1]}.png')
+    #pl.show()
 
 
 if __name__ == '__main__':

@@ -40,7 +40,7 @@ def plot_redshift_distribution(fp, ax, s, fig, flag=False, pi_factor=0.):
     #if np.nanmax(be) < 0 and 0 < np.nanmean(g) < 2:
     #    g += np.pi
 
-    draw_arrows(ax, g, data[:, 0], data[:, 1], margin=0.6)
+    #draw_arrows(ax, g, data[:, 0], data[:, 1], margin=0.6)
 
 
 
@@ -121,37 +121,53 @@ def main():
     import os
     fp0 = '/home/jan-menno/Data/Schwarzschild/depre_2/s0/'
     fp0 = "Z:/Polarization/Kerr/a-05/"
-    phis = [x[0] for x in os.walk(fp0)]
-    phis = [phi + '/' for phi in phis if not phi == fp0]
-    phis.sort()
+    fps = ["Z:/Polarization/Kerr/polarization/whole_orbit/a-09/", "Z:/Polarization/Kerr/polarization/whole_orbit/a-05/", "Z:/Polarization/Schwarzschild/sphere/s0/",
+           "Z:/Polarization/Kerr/polarization/whole_orbit/a05/", "Z:/Polarization/Kerr/polarization/whole_orbit/a09/"]
+    labels = ['a = -0.9', 'a = -0.5', 'a =  0.0', 'a =  0.5', 'a =  0.9']
 
-    pi_factor = 0
-    s = 0
-
-    fig, ax = pl.subplots(1, 1, figsize=(10, 10))
-    axes = np.array([ax])
-
-    gmean = []
-    x = []
-    for fp in phis:
-        gn, gx, gm, im = plot_redshift_distribution(fp, ax, s, fig, flag=True, pi_factor=pi_factor)
-
-        if gmean:
-            if gmean[-1] > gm:
-                gmean.append(np.nan)
-                x.append(float(x[-1] + 0.0001))#float(fp[len(fp0):-1]) - 0.01)
-                gmean.append(0)
-                x.append(float(x[-1] + 0.0002))
-
-        gmean.append(gm)
-        x.append(float(fp[len(fp0):-1]))
-
-
-    print(x, gmean)
     fig, ax = pl.subplots(1, 1, figsize=(10, 5))
-    ax.plot(x, gmean, label='mean pol angle')
-    ax.set_xlabel('phi_em')
-    ax.set_ylabel('pol angle')
+
+    for n, fp0 in enumerate(fps):
+        phis = [x[0] for x in os.walk(fp0)]
+        phis = [phi + '/' for phi in phis if not phi == fp0]
+        phis.sort()
+
+        pi_factor = 0
+        s = 0
+
+        if n == 2:
+            f = 'Z:/Polarization/Schwarzschild/pol_orbit_s0.txt'
+            data = np.loadtxt(f)
+            ax.plot(data[0], data[1], label=labels[n], c='black')
+            continue
+
+        #fig, ax = pl.subplots(1, 1, figsize=(10, 10))
+        #axes = np.array([ax])
+
+        gmean = []
+        x = []
+        for fp in phis:
+            gn, gx, gm, im = plot_redshift_distribution(fp, ax, s, fig, flag=True, pi_factor=pi_factor)
+
+            if gmean:
+                if gmean[-1] > gm:
+                    gmean.append(np.nan)
+                    x.append(float(x[-1] + 0.0001))#float(fp[len(fp0):-1]) - 0.01)
+                    gmean.append(0)
+                    x.append(float(x[-1] + 0.0002))
+
+            gmean.append(gm)
+            x.append(float(fp[len(fp0):-1]))
+
+
+        print(x, gmean)
+
+        if n == 2:
+            ax.plot(x, gmean, label=labels[n], c='black')
+        else:
+            ax.plot(x, gmean, label=labels[n])
+    ax.set_xlabel(r'$\varphi_{em}$')
+    ax.set_ylabel(r'polarization angle')
 
     ax.set_xlim(0, np.pi * 2)
     ax.set_ylim(0, np.pi * 2)
